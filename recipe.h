@@ -1,8 +1,11 @@
 #ifndef RECIPE_H
 #define RECIPE_H
 
+#include "ingredient.h"
+
 #include <QString>
 #include <QList>
+#include <iostream>
 
 struct RecipeStats {
     int prepTime;
@@ -25,8 +28,10 @@ struct Nutrition {
 class Recipe
 {
 public:
-    Recipe(QString title, QString description, RecipeStats stats, QList<QString> ingredients,
+    Recipe(QString title, QString description, RecipeStats stats, QList<Ingredient> ingredients,
            Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions);
+
+    //Recipe(QString title);
 
     QString title;
     QString description;
@@ -35,7 +40,7 @@ public:
 
     RecipeStats stats;
 
-    QVector<QString> ingredients;
+    QList<Ingredient> ingredients;
 
 
 
@@ -43,7 +48,8 @@ public:
 
     bool vegan;
     bool vegetarian;
-    QVector<QString> instructions;
+    QList<QString> instructions;
+
 };
 
 #endif // RECIPE_H

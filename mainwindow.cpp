@@ -2,6 +2,7 @@
 #include "qpushbutton.h"
 #include "qjsondocument.h"
 #include "ui_mainwindow.h"
+#include "missingfileexception.h"
 
 #include <QFile>
 #include <QFileInfo>
@@ -13,6 +14,10 @@
 #include <QGuiApplication>
 #include <QScreen>
 #include <QString>
+#include <Recipe.h>
+#include <QDir>
+#include <QLayout>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -32,7 +37,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // TODO: remove absolute file name
     QFile recipesFile("C:/Users/jason/Desktop/College/Modules/CS4076/Project/recipes/recipes.json");
-    recipesFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    if (!recipesFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        throw new MissingFileException("recipes.json");
+    }
     QString data = recipesFile.readAll();
 
     QJsonDocument json = QJsonDocument::fromJson(data.toUtf8());
@@ -45,10 +52,18 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+
+
+    //    QFile file(QDir::homePath() + "/something.json");
+    // C:/Users/jason
+
     int i = 0;
+
     // for each recipe
     for (const QJsonValue &recipe : recipes) {
         QVBoxLayout* recipeContainer = new QVBoxLayout();
+
+        recipeContainer->setSpacing(10);
 
         QLabel* image = new QLabel();
 
@@ -69,9 +84,6 @@ MainWindow::MainWindow(QWidget *parent)
         QJsonObject stats = recipe["stats"].toObject();
         QJsonObject stats_time = stats["times"].toObject();
 
-
-        qDebug() << stats_time.value("prep").toDouble();
-
         QString str(QString::number(stats_time.value("prep").toDouble()));
 
 
@@ -82,15 +94,16 @@ MainWindow::MainWindow(QWidget *parent)
         timeIconLabel->setPixmap(timeIcon);
         statsGrid->addWidget(timeIconLabel, 0, 0);
         statsGrid->addWidget(timeValue, 0, 1, 1, 4);
-        recipeContainer->addLayout(statsGrid);
 
         QLabel* servingCountIconLabel = new QLabel;
-        QLabel* servingCountValue = new QLabel("Serves 4");
+        int servingCountValue = stats["serves"].toInt();
         QPixmap servingCountIcon(":/images/icon_restaurant.svg");
-        servingCountValue->setStyleSheet("background: #fff;");
+        QLabel* servingCountValueLabel = new QLabel(QString(QString::number(servingCountValue)));
+        servingCountValueLabel->setStyleSheet("background: #fff;");
         servingCountIconLabel->setPixmap(servingCountIcon);
         statsGrid->addWidget(servingCountIconLabel, 1, 0);
-        statsGrid->addWidget(servingCountValue, 1, 1, 1, 4);
+        statsGrid->addWidget(servingCountValueLabel, 1, 1, 1, 4);
+
         recipeContainer->addLayout(statsGrid);
 
         QLabel* description = new QLabel(recipe["description"].toString());
@@ -104,8 +117,31 @@ MainWindow::MainWindow(QWidget *parent)
         recipeContainer->addWidget(viewBtn);
 
 
+        //        Recipe* r = new Recipe();
 
-        ui->gridLayout->addLayout(recipeContainer, 0, i);
+        RecipeStats recipeStats;
+        recipeStats.cookTime = stats_time.value("cook").toInt();
+        recipeStats.prepTime = stats_time.value("prep").toInt();
+        recipeStats.difficulty = 0;
+        recipeStats.serves = servingCountValue;
+
+        Nutrition nutrition;
+
+        QJsonArray ingredientsJsonArray = recipe["ingredients"].toArray();
+
+        QList<Ingredient> ingredients;
+        for (const QJsonValue &ingredientVal: ingredientsJsonArray) {
+            QJsonObject ingredientObj = ingredientVal.toObject();
+            Ingredient ingredient(ingredientObj["name"].toString(), ingredientObj["quantity"].toString());
+            ingredients.push_back(ingredient);
+        }
+
+        QList<QString> instructions;
+        Recipe* recipeObj = new Recipe(recipe["title"].toString(), recipe["descriptipn"].toString(), recipeStats, ingredients, nutrition, false, false, instructions);
+
+
+        ui->gridLayout->addLayout(recipeContainer, i / 4, i % 4);
+        ui->gridLayout->setRowMinimumHeight(i / 4, 600);
         i++;
 
 
@@ -113,7 +149,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     recipesFile.close();
 
+    //    ui->stackedWidget->setCurrentIndex(1);
+    //    setCentralWidget(ui->stackedWidget); // :D
+    setCentralWidget(ui->scrollArea);
+
 }
+
+//void createRecipeCard(Recipe r, QGridLayout l) {
+
+//}
+
 
 MainWindow::~MainWindow()
 {

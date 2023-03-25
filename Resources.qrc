@@ -1,8 +1,9 @@
 <RCC>
     <qresource prefix="/images">
-        <file>margherita-pizza-with-argula-and-prosciutto-FT-RECIPE0721-04368ec288a84d2e997573aca0001d98.jpg</file>
-        <file>hamburger-ge7d611ac9_1280.jpg</file>
+        <file>margherita-pizza.jpg</file>
+        <file>hamburger.jpg</file>
         <file>icon_clock.svg</file>
         <file>icon_restaurant.svg</file>
+        <file>cake.jpg</file>
     </qresource>
 </RCC>

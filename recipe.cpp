@@ -14,6 +14,11 @@ Recipe::Recipe(QString title, QString description, QList<QString> photos, Recipe
 {
 }
 
+Recipe::Recipe(const Recipe& otherRecipe) {
+    qDebug() << "copy";
+    title = QString(otherRecipe.title);
+}
+
 QLabel* Recipe::getCardTitleComponent() {
     QLabel* titleLabel = new QLabel(title);
     titleLabel->setStyleSheet("QLabel {font-size: 26px; background: #fff; font-weight:bold; padding: 6px;}");

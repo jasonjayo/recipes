@@ -55,6 +55,7 @@ public:
     bool vegetarian;
     QList<QString> instructions;
 
+    Recipe(const Recipe &otherRecipe);
 protected:
     virtual QLabel *getCardTitleComponent();
     virtual QGridLayout *getCardStatsGridComponent();

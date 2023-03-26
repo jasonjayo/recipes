@@ -210,6 +210,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     displayCards();
 
+    // working on copy constructor
+    qDebug() << &drinkRecipes.at(0)->title;
+    DrinkRecipe copy = *drinkRecipes.at(0);
+    qDebug() << &copy.title;
+
 
 
     recipesFile.close();

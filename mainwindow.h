@@ -17,5 +17,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    void displayCards();
+    void removeAllCards();
+    void clearWidgets(QLayout *layout, int startIndex);
 };
 #endif // MAINWINDOW_H

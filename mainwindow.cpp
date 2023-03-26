@@ -22,6 +22,9 @@
 #include <QGroupBox>
 #include <QCheckBox>
 #include <QRadioButton>
+#include <QContextMenuEvent>
+#include <QAction>
+#include <QSlider>
 
 #define NUM_CARDS_PER_LINE 4
 #define GRID_TOP_OFFSET 1
@@ -36,11 +39,17 @@ bool showDrinksOnly = false;
 bool showVeganOnly = true;
 bool showVegetarianOnly = false;
 
+int maxTime = 30;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    resetAct = new QAction("Reset list", this);
+    resetAct->setStatusTip("Reset the list of displayed recipes");
+    connect(resetAct, &QAction::triggered, this, &MainWindow::removeAllCards);
 
 #ifdef GRID_TOP_OFFSET
 
@@ -52,18 +61,33 @@ MainWindow::MainWindow(QWidget *parent)
     //    QFile file(QDir::homePath() + "/something.json");
     // C:/Users/jason
 
-    QGroupBox* filtersBox = new QGroupBox("Dietary Filters");
+    QGroupBox* filtersBox = new QGroupBox("Filters");
     QCheckBox* veganFilterBox = new QCheckBox("Vegan");
     QCheckBox* vegetarianFilterBox = new QCheckBox("Vegetarian");
     QVBoxLayout* filtersVBox = new QVBoxLayout();
     QRadioButton* showFoodOnlyFilterBtn = new QRadioButton("Show food only");
     QRadioButton* showDrinksOnlyFilterBtn = new QRadioButton("Show drinks only");
     QRadioButton* showAllFilterBtn = new QRadioButton("Show all");
+    QLabel* timeSliderLabel = new QLabel("Prep + cook time max.");
+    QLabel* timeSliderValue = new QLabel(QString::number(maxTime) + " mins.");
+    QHBoxLayout* timeSliderContainer = new QHBoxLayout();
+    QSlider* servingsSlider = new QSlider(Qt::Horizontal);
+    servingsSlider->setMaximumWidth(150);
+    timeSliderContainer->addWidget(timeSliderLabel);
+    timeSliderContainer->addWidget(servingsSlider, Qt::AlignLeft);
+    timeSliderContainer->addWidget(timeSliderValue);
+    timeSliderContainer->addStretch(1);
+    connect(servingsSlider, &QSlider::sliderMoved, this, [=](int pos) {
+         maxTime = pos;
+         timeSliderValue->setText(QString::number(pos) + " mins.");
+         displayCards();
+    });
     filtersVBox->addWidget(veganFilterBox);
     filtersVBox->addWidget(vegetarianFilterBox);
     filtersVBox->addWidget(showFoodOnlyFilterBtn);
     filtersVBox->addWidget(showDrinksOnlyFilterBtn);
     filtersVBox->addWidget(showAllFilterBtn);
+    filtersVBox->addLayout(timeSliderContainer);
     filtersBox->setLayout(filtersVBox);
 
     QPushButton* removeAllCardsBtn = new QPushButton("Remove all cards");
@@ -71,6 +95,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(removeAllCardsBtn, &QPushButton::clicked, this, &MainWindow::removeAllCards);
 
     showAllFilterBtn->setChecked(true);
+    servingsSlider->setTickInterval(1);
+    servingsSlider->setMinimum(5);
+    servingsSlider->setMaximum(120);
 
     ui->gridLayout->addWidget(filtersBox, 0, 1, 1, 3);
 
@@ -208,6 +235,7 @@ void MainWindow::displayCards() {
         for (FoodRecipe* &r: foodRecipes) {
             if (showVeganOnly && !(r->vegan)) continue;
             if (showVegetarianOnly && !(r->vegetarian)) continue;
+            if (maxTime < (r->stats.prepTime + r->stats.cookTime)) continue;
 
             QVBoxLayout* recipeContainer = r->createCard();
             ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
@@ -219,6 +247,7 @@ void MainWindow::displayCards() {
         for (DrinkRecipe* &r: drinkRecipes) {
             if (showVeganOnly && !(r->vegan)) continue;
             if (showVegetarianOnly && !(r->vegetarian)) continue;
+            if (maxTime < (r->stats.prepTime + r->stats.cookTime)) continue;
 
             QVBoxLayout* recipeContainer = r->createCard();
             ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
@@ -266,6 +295,12 @@ void MainWindow::clearWidgets(QLayout * layout, int startIndex) {
       delete item->widget();
       clearWidgets(item->layout(), 0);
    }
+}
+
+void MainWindow::contextMenuEvent(QContextMenuEvent *event) {
+    QMenu menu(this);
+    menu.addAction(resetAct);
+    menu.exec(event->globalPos());
 }
 
 MainWindow::~MainWindow()

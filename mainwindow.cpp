@@ -36,10 +36,10 @@ QList<DrinkRecipe*> drinkRecipes;
 bool showFoodOnly = false;
 bool showDrinksOnly = false;
 
-bool showVeganOnly = true;
+bool showVeganOnly = false;
 bool showVegetarianOnly = false;
 
-int maxTime = 30;
+int maxTime = 200;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -211,10 +211,20 @@ MainWindow::MainWindow(QWidget *parent)
     displayCards();
 
     // working on copy constructor
-    qDebug() << &drinkRecipes.at(0)->title;
-    DrinkRecipe copy = *drinkRecipes.at(0);
-    qDebug() << &copy.title;
+//    qDebug() << &drinkRecipes.at(0)->instructions;
+//    DrinkRecipe copy = *drinkRecipes.at(0);
+//    qDebug() << &copy.instructions;
 
+    std::ostringstream buffer;
+    buffer << drinkRecipes.at(0);
+    std::string s = buffer.str();
+    QString str = QString::fromStdString(s);
+    qDebug() << str;
+
+    DrinkRecipe dr = *drinkRecipes.at(0);
+    std::cout << dr;
+
+//qDebug() << *drinkRecipes.at(0) + *drinkRecipes.at(1);
 
 
     recipesFile.close();
@@ -225,7 +235,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::displayCards() {
-    qDebug() << "showing vegan only? " << showVeganOnly;
+    //qDebug() << "showing vegan only? " << showVeganOnly;
     removeAllCards();
 
 //    qDebug() << ui->gridLayout->count();

@@ -7,6 +7,9 @@
 #include <QLabel>
 #include <QPushButton>
 
+#include <sstream>
+#include <iostream>
+
 Recipe::Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
                Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions)
     : title(title), description(description), photos(photos), stats(stats), ingredients(ingredients), nutrition(nutrition),
@@ -17,6 +20,24 @@ Recipe::Recipe(QString title, QString description, QList<QString> photos, Recipe
 Recipe::Recipe(const Recipe& otherRecipe) {
     qDebug() << "copy";
     title = QString(otherRecipe.title);
+    description = QString(otherRecipe.description);
+    // deep copy performed for QList automatically by Qt when this copy modified, so otherRecipe doesn't get modified   as well
+    photos = otherRecipe.photos;
+    stats.cookTime = otherRecipe.stats.cookTime;
+    stats.prepTime = otherRecipe.stats.prepTime;
+    stats.difficulty = otherRecipe.stats.difficulty;
+    ingredients = otherRecipe.ingredients;
+    nutrition.carbs = otherRecipe.nutrition.carbs;
+    nutrition.fat = otherRecipe.nutrition.fat;
+    nutrition.fibre = otherRecipe.nutrition.fibre;
+    nutrition.kcal = otherRecipe.nutrition.kcal;
+    nutrition.protein = otherRecipe.nutrition.protein;
+    nutrition.salt = otherRecipe.nutrition.salt;
+    nutrition.saturates = otherRecipe.nutrition.saturates;
+    nutrition.sugars = otherRecipe.nutrition.sugars;
+    vegan = otherRecipe.vegan;
+    vegetarian = otherRecipe.vegetarian;
+    instructions = otherRecipe.instructions;
 }
 
 QLabel* Recipe::getCardTitleComponent() {
@@ -55,4 +76,14 @@ QPushButton* Recipe::getCardButtonComponent() {
     viewBtn->setText("View recipe");
     viewBtn->setStyleSheet("QPushButton { background: #cfcfcf; border: none; padding: 8px 0; font-weight:bold; text-transform:uppercase; font-size: 12px; }QPushButton:hover {background: #fff}");
     return viewBtn;
+}
+
+double Recipe::operator+(Recipe const& r) {
+    return nutrition.kcal + r.nutrition.kcal;
+}
+
+std::ostream &operator<<(std::ostream&o, const Recipe &r) {
+    qDebug() << "<< operator called";
+    o << "test ostream";
+    return o;
 }

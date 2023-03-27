@@ -13,6 +13,7 @@ public:
     QVBoxLayout* createCard();
     int servings;
     int getServings();
+    friend std::ostringstream &operator<<(std::ostringstream &o, const FoodRecipe &r);
 };
 
 #endif // FOODRECIPE_H

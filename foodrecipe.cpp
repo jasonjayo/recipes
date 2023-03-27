@@ -4,6 +4,10 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include <sstream>
+#include <iostream>
+
+
 FoodRecipe::FoodRecipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
                        Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, int servings)
     : Recipe(title, description, photos, stats, ingredients, nutrition, vegan, vegetarian, instructions), servings(servings)
@@ -71,4 +75,10 @@ QVBoxLayout* FoodRecipe::createCard() {
     recipeContainer->addWidget(viewBtn);
 
     return recipeContainer;
+}
+
+std::ostringstream &operator<<(std::ostringstream &o, const FoodRecipe &r) {
+    qDebug() << "<< operator called";
+    o << "test ostream";
+    return o;
 }

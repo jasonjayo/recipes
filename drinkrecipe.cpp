@@ -1,7 +1,9 @@
 #include "drinkrecipe.h"
+#include "qscreen.h"
 
 #include <QLabel>
 #include <QPushButton>
+#include <qguiapplication.h>
 
 DrinkRecipe::DrinkRecipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
                          Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, bool alcoholic)
@@ -19,9 +21,12 @@ QVBoxLayout* DrinkRecipe::createCard() {
     QPixmap pix(":/images/" + photos.first());
     recipeContainer->addWidget(image);
 
+    QScreen *screen = QGuiApplication::primaryScreen();
+    int width = screen->geometry().width();
+
     image->setScaledContents(true);
 //    image->setPixmap(pix.scaled( image->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    image->setPixmap(pix.scaledToWidth(450));
+    image->setPixmap(pix.scaledToWidth((width - 200) / 4));
 
 //    image->setStyleSheet("QLabel { image: url(:/images/" + photos.first() + ")}");
 

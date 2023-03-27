@@ -56,6 +56,9 @@ public:
     QList<QString> instructions;
 
     Recipe(const Recipe &otherRecipe);
+
+    friend std::ostream &operator<<(std::ostream &o, const Recipe &r);
+    double operator +(const Recipe &r);
 protected:
     virtual QLabel *getCardTitleComponent();
     virtual QGridLayout *getCardStatsGridComponent();

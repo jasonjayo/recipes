@@ -224,17 +224,21 @@ MainWindow::MainWindow(QWidget *parent)
 //    DrinkRecipe copy = *drinkRecipes.at(0);
 //    qDebug() << &copy.instructions;
 
-    std::ostringstream buffer;
-    buffer << drinkRecipes.at(0);
-    std::string s = buffer.str();
-    QString str = QString::fromStdString(s);
-    qDebug() << str;
-
-    DrinkRecipe dr = *drinkRecipes.at(0);
-    std::cout << dr;
+//    std::ostringstream buffer;
+//    buffer << drinkRecipes.at(0);
+//    QString str = QString::fromStdString(buffer.str());
+//    qDebug() << "Output: " << str;
 
 //qDebug() << *drinkRecipes.at(0) + *drinkRecipes.at(1);
 
+    if (*drinkRecipes.at(0) < *drinkRecipes.at(1)) {
+        qDebug() << "0 is less than 1!";
+    }
+
+    std::cout << "blah: " << drinkRecipes.at(0);
+
+    DrinkRecipe dr = *drinkRecipes.at(0);
+        std::cout << dr;
 
     recipesFile.close();
 
@@ -256,24 +260,36 @@ void MainWindow::displayCards() {
 
     int i = 0;
     if (!showDrinksOnly) {
-        for (FoodRecipe* &r: foodRecipes) {
+//        for (FoodRecipe* &r: foodRecipes) {
+        for (int j = 0; j < foodRecipes.count(); j++) {
+            FoodRecipe* r = foodRecipes.at(j);
             if (showVeganOnly && !(r->vegan)) continue;
             if (showVegetarianOnly && !(r->vegetarian)) continue;
             if (maxTime < (r->stats.prepTime + r->stats.cookTime)) continue;
 
             QVBoxLayout* recipeContainer = r->createCard();
+
+            if (j + 1 < foodRecipes.count() && *r < *foodRecipes.at(j+1)) {
+                QLabel* l = new QLabel("Fewer calories (" + QString::number(r->nutrition.kcal) + ") than " + foodRecipes.at(j+1)->title + "(" + QString::number(foodRecipes.at(j+1)->nutrition.kcal) + ")!");
+                recipeContainer->insertWidget(recipeContainer->count() - 2, l);
+            }
             ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
 //            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
             i++;
         }
     }
     if (!showFoodOnly) {
-        for (DrinkRecipe* &r: drinkRecipes) {
+        for (int j = 0; j < drinkRecipes.count(); j++) {
+            DrinkRecipe* r = drinkRecipes.at(j);
             if (showVeganOnly && !(r->vegan)) continue;
             if (showVegetarianOnly && !(r->vegetarian)) continue;
             if (maxTime < (r->stats.prepTime + r->stats.cookTime)) continue;
 
             QVBoxLayout* recipeContainer = r->createCard();
+            if (j + 1 < drinkRecipes.count() && *r < *drinkRecipes.at(j+1)) {
+                QLabel* l = new QLabel("Fewer calories (" + QString::number(r->nutrition.kcal) + ") than " + drinkRecipes.at(j+1)->title + " (" + QString::number(drinkRecipes.at(j+1)->nutrition.kcal) + ")!");
+                recipeContainer->insertWidget(recipeContainer->count() - 2, l);
+            }
             ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
 //            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
             i++;

@@ -110,3 +110,12 @@ std::ostream &operator<<(std::ostream&o, const Recipe &r) {
     o << "test ostream";
     return o;
 }
+
+bool operator< (const Recipe &r1, const Recipe &r2) {
+    qDebug() << "< called - checking " + QString::number(r1.nutrition.kcal) + " and " + QString::number(r2.nutrition.kcal);
+    return r1.nutrition.kcal < r2.nutrition.kcal;
+}
+bool operator> (const Recipe &r1, const Recipe &r2) {
+    qDebug() << "> called";
+    return r1.nutrition.kcal > r2.nutrition.kcal;
+}

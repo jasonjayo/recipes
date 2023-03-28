@@ -69,6 +69,8 @@ public:
     Recipe(const Recipe &otherRecipe);
 
     friend std::ostream &operator<<(std::ostream &o, const Recipe &r);
+    friend bool operator< (const Recipe &r1, const Recipe &r2);
+    friend bool operator> (const Recipe &r1, const Recipe &r2);
     double operator +(const Recipe &r);
 protected:
     virtual QLabel *getCardTitleComponent();

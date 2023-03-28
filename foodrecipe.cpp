@@ -75,7 +75,6 @@ QVBoxLayout* FoodRecipe::createCard() {
     statsGrid->addWidget(stats_servingCountIconLabel, 1, 0);
     statsGrid->addWidget(stats_servingCountValueLabel, 1, 1, 1, 4);*/
 
-    recipeContainer->addLayout(statsGrid);
 
     // description
     QLabel* descriptionLabel = Recipe::getCardDescriptionComponent();

@@ -1,16 +1,21 @@
 #include "foodrecipe.h"
+#include "utils.h"
 
 #include <QLabel>
 #include <QPushButton>
+#include <QScreen>
 #include <QVBoxLayout>
+
+#include "qscreen.h"
+#include <qguiapplication.h>
 
 #include <sstream>
 #include <iostream>
 
 
 FoodRecipe::FoodRecipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
-                       Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, int servings)
-    : Recipe(title, description, photos, stats, ingredients, nutrition, vegan, vegetarian, instructions), servings(servings)
+                       Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, DietaryInfo dietaryInfo, int servings)
+    : Recipe(title, description, photos, stats, ingredients, nutrition, vegan, vegetarian, instructions, dietaryInfo), servings(servings)
 {
     qDebug() << photos.size();
 }
@@ -30,13 +35,20 @@ QVBoxLayout* FoodRecipe::createCard() {
     QPixmap pix(":/images/" + photos.first());
     recipeContainer->addWidget(image);
 
-    //image->setScaledContents(true);
+    QScreen *screen = QGuiApplication::primaryScreen();
+    int width = screen->geometry().width();
+
+    image->setScaledContents(true);
     //image->setPixmap(pix.scaled( image->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    image->setPixmap(pix.scaled(300, 200));
+//    image->setPixmap(pix.scaled(300, 200));
+    image->setPixmap(pix.scaledToWidth((width - 200) / 4));
 
     // title
     QLabel* titleLabel = Recipe::getCardTitleComponent();
     recipeContainer->addWidget(titleLabel);
+
+    QHBoxLayout* labels = getLabelsComponent(this);
+    recipeContainer->addLayout(labels);
 
 
     // stats grid

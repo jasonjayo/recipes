@@ -27,11 +27,21 @@ struct Nutrition {
     double salt;
 };
 
+// bit structures
+struct DietaryInfo {
+    unsigned vegan: 1;
+    unsigned vegetarian: 1;
+    unsigned glutenFree: 1;
+    unsigned lactoseFree: 1;
+};
+
 class Recipe
 {
 public:
     Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
-           Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions);
+           Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, DietaryInfo dietaryInfo);
+
+
 
 
     virtual QVBoxLayout* createCard() = 0;
@@ -41,6 +51,7 @@ public:
     QString description;
     QList<QString> photos;
 
+    DietaryInfo dietaryInfo;
 
 
     RecipeStats stats;
@@ -64,6 +75,7 @@ protected:
     virtual QGridLayout *getCardStatsGridComponent();
     virtual QLabel *getCardDescriptionComponent();
     virtual QPushButton *getCardButtonComponent();
+//    virtual QHBoxLayout *getLabelsComponent();
 };
 
 #endif // RECIPE_H

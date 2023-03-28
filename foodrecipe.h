@@ -8,7 +8,7 @@ class FoodRecipe : public Recipe
 {
 public:
     FoodRecipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
-               Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, int servings);
+               Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, DietaryInfo dietaryInfo, int servings);
 
     QVBoxLayout* createCard();
     int servings;

@@ -15,7 +15,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     missingfileexception.cpp \
-    recipe.cpp
+    recipe.cpp \
+    utils.cpp
 
 HEADERS += \
     drinkrecipe.h \
@@ -23,7 +24,8 @@ HEADERS += \
     ingredient.h \
     mainwindow.h \
     missingfileexception.h \
-    recipe.h
+    recipe.h \
+    utils.h
 
 FORMS += \
     mainwindow.ui

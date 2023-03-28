@@ -7,7 +7,7 @@ class DrinkRecipe : public Recipe
 {
 public:
     DrinkRecipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
-                Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, bool alcoholic);
+                Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, DietaryInfo dietaryInfo, bool alcoholic);
 
     bool alcoholic;
     QVBoxLayout* createCard();

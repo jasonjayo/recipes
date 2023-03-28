@@ -1,13 +1,14 @@
 #include "drinkrecipe.h"
 #include "qscreen.h"
+#include "utils.h"
 
 #include <QLabel>
 #include <QPushButton>
 #include <qguiapplication.h>
+#include <QHBoxLayout>
 
-DrinkRecipe::DrinkRecipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
-                         Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, bool alcoholic)
-    : Recipe(title, description, photos, stats, ingredients, nutrition, vegan, vegetarian, instructions), alcoholic(alcoholic)
+DrinkRecipe::DrinkRecipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients, Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, DietaryInfo dietaryInfo, bool alcoholic)
+    : Recipe(title, description, photos, stats, ingredients, nutrition, vegan, vegetarian, instructions, dietaryInfo), alcoholic(alcoholic)
 {
 
 }
@@ -35,6 +36,8 @@ QVBoxLayout* DrinkRecipe::createCard() {
     QLabel* titleLabel = Recipe::getCardTitleComponent();
     recipeContainer->addWidget(titleLabel);
 
+    QHBoxLayout* labels = getLabelsComponent(this);
+    recipeContainer->addLayout(labels);
 
     // stats grid
     QGridLayout* statsGrid = Recipe::getCardStatsGridComponent();

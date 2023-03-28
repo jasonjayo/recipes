@@ -10,10 +10,8 @@
 #include <sstream>
 #include <iostream>
 
-Recipe::Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
-               Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions)
-    : title(title), description(description), photos(photos), stats(stats), ingredients(ingredients), nutrition(nutrition),
-      vegan(vegan), vegetarian(vegetarian), instructions(instructions)
+Recipe::Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients, Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, DietaryInfo dietaryInfo)
+    : title(title), description(description), photos(photos), dietaryInfo(dietaryInfo), stats(stats), ingredients(ingredients), nutrition(nutrition), vegan(vegan), vegetarian(vegetarian), instructions(instructions)
 {
 }
 
@@ -77,6 +75,31 @@ QPushButton* Recipe::getCardButtonComponent() {
     viewBtn->setStyleSheet("QPushButton { background: #cfcfcf; border: none; padding: 8px 0; font-weight:bold; text-transform:uppercase; font-size: 12px; }QPushButton:hover {background: #fff}");
     return viewBtn;
 }
+
+//QHBoxLayout* Recipe::getLabelsComponent() {
+//    QHBoxLayout* box = new QHBoxLayout();
+//    if (dietaryInfo.vegetarian) {
+//        QLabel* vegetarian = new QLabel("Vegetarian");
+//        vegetarian->setStyleSheet("background: #4caf50; padding: 2px 5px;");
+//        box->addWidget(vegetarian);
+//    }
+//    if (dietaryInfo.vegan) {
+//        QLabel* vegetarian = new QLabel("Vegan");
+//        vegetarian->setStyleSheet("background: #8bc34a; padding: 2px 5px;");
+//        box->addWidget(vegetarian);
+//    }
+//    if (dietaryInfo.lactoseFree) {
+//        QLabel* vegetarian = new QLabel("Lactose Free");
+//        vegetarian->setStyleSheet("background: #cddc39; padding: 2px 5px;");
+//        box->addWidget(vegetarian);
+//    }
+//    if (dietaryInfo.glutenFree) {
+//        QLabel* vegetarian = new QLabel("Gluten Free");
+//        vegetarian->setStyleSheet("background: #009688; padding: 2px 5px;");
+//        box->addWidget(vegetarian);
+//    }
+//    return box;
+//}
 
 double Recipe::operator+(Recipe const& r) {
     return nutrition.kcal + r.nutrition.kcal;

@@ -179,6 +179,15 @@ MainWindow::MainWindow(QWidget *parent)
         bool vegan = recipeJsonObj["vegan"].toBool();
         bool vegetarian = recipeJsonObj["vegetarian"].toBool();
 
+        DietaryInfo diateryInfo;
+        QJsonObject diateryInfoJsonObj = recipeJsonObj["dietaryInfo"].toObject();
+        diateryInfo.vegan = diateryInfoJsonObj["vegan"].toBool();
+        diateryInfo.vegetarian = diateryInfoJsonObj["vegetarian"].toBool();
+        diateryInfo.glutenFree = diateryInfoJsonObj["glutenFree"].toBool();
+        diateryInfo.lactoseFree = diateryInfoJsonObj["lactoseFree"].toBool();
+
+        qDebug() << diateryInfo.vegan;
+
         QList<QString> instructions;
         QJsonArray instructionsJsonArr = recipeJsonObj["instructions"].toArray();
         for (const QJsonValue &instructionVal: instructionsJsonArr) {
@@ -187,11 +196,11 @@ MainWindow::MainWindow(QWidget *parent)
 
         //        Recipe* r;
         if (recipeType == "food") {
-            FoodRecipe* recipeObj = new FoodRecipe(title, description, photos, recipeStats, ingredients, nutrition, vegan, vegetarian, instructions, recipeJsonObj["serves"].toInt());
+            FoodRecipe* recipeObj = new FoodRecipe(title, description, photos, recipeStats, ingredients, nutrition, vegan, vegetarian, instructions, diateryInfo, recipeJsonObj["serves"].toInt());
             foodRecipes.push_back(recipeObj);
             //            r = recipeObj;
         } else {
-            DrinkRecipe* recipeObj = new DrinkRecipe(title, description, photos, recipeStats, ingredients, nutrition, vegan, vegetarian, instructions, false);
+            DrinkRecipe* recipeObj = new DrinkRecipe(title, description, photos, recipeStats, ingredients, nutrition, vegan, vegetarian, instructions, diateryInfo, false);
             drinkRecipes.push_back(recipeObj);
             //            r = recipeObj;
         }
@@ -254,7 +263,7 @@ void MainWindow::displayCards() {
 
             QVBoxLayout* recipeContainer = r->createCard();
             ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
-            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
+//            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
             i++;
         }
     }
@@ -266,7 +275,7 @@ void MainWindow::displayCards() {
 
             QVBoxLayout* recipeContainer = r->createCard();
             ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
-            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
+//            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
             i++;
         }
     }

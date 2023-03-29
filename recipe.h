@@ -2,6 +2,7 @@
 #define RECIPE_H
 
 #include "ingredient.h"
+#include "stringable.h"
 
 #include <QString>
 #include <QList>
@@ -35,7 +36,7 @@ struct DietaryInfo {
     unsigned lactoseFree: 1;
 };
 
-class Recipe
+class Recipe : protected Stringable
 {
 public:
     Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
@@ -68,10 +69,11 @@ public:
 
     Recipe(const Recipe &otherRecipe);
 
-    friend std::ostream &operator<<(std::ostream &o, const Recipe &r);
+    friend std::ostream &operator<<(std::ostream &o, Recipe &r);
     friend bool operator< (const Recipe &r1, const Recipe &r2);
     friend bool operator> (const Recipe &r1, const Recipe &r2);
     double operator +(const Recipe &r);
+    std::string to_long_string();
 protected:
     virtual QLabel *getCardTitleComponent();
     virtual QGridLayout *getCardStatsGridComponent();

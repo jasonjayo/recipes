@@ -6,6 +6,7 @@
 #include <iostream>
 #include <QLabel>
 #include <QPushButton>
+#include <QObject>
 
 #include <sstream>
 #include <iostream>
@@ -52,9 +53,10 @@ QGridLayout* Recipe::getCardStatsGridComponent() {
 
     // prep time
     QLabel* stats_timeIconLabel = new QLabel;
-    QLabel* stats_timeValue = new QLabel(QString("Prep in " + QString::number(stats.prepTime) + " minutes"));
+    QLabel* stats_timeValue = new QLabel(QString("Prep in " + QString::number(stats.prepTime) + " minutes\n" +
+                              "Cook in " + QString::number(stats.cookTime) + " minutes"));
     QPixmap stats_timeIcon(":/images/icon_clock.svg");
-    stats_timeValue->setStyleSheet("background: #fff;");
+    stats_timeValue->setStyleSheet("background: #fff; padding: 5px;");
     stats_timeIconLabel->setPixmap(stats_timeIcon);
     statsGrid->addWidget(stats_timeIconLabel, 0, 0);
     statsGrid->addWidget(stats_timeValue, 0, 1, 1, 4);
@@ -73,6 +75,10 @@ QPushButton* Recipe::getCardButtonComponent() {
     QPushButton* viewBtn = new QPushButton;
     viewBtn->setText("View recipe");
     viewBtn->setStyleSheet("QPushButton { background: #cfcfcf; border: none; padding: 8px 0; font-weight:bold; text-transform:uppercase; font-size: 12px; }QPushButton:hover {background: #fff}");
+//    QObject::connect(viewBtn, &QPushButton::clicked, , [=]() {
+////        ui->stackedWidget->setCurrentIndex(1);
+//        qDebug() << "viewBtn clicked";
+//    });
     return viewBtn;
 }
 
@@ -105,17 +111,34 @@ double Recipe::operator+(Recipe const& r) {
     return nutrition.kcal + r.nutrition.kcal;
 }
 
-std::ostream &operator<<(std::ostream&o, const Recipe &r) {
-    qDebug() << "<< operator called";
-    o << "test ostream";
+std::string Recipe::to_long_string() {
+    std::string s;
+    s += title.toStdString() + " - " + description.toStdString() + "\n\n";
+    if (dietaryInfo.glutenFree) {
+        s += "Gluten free\n";
+    }
+    if (dietaryInfo.lactoseFree) {
+        s += "Lactose free\n";
+    }
+    if (dietaryInfo.vegan) {
+        s += "Vegan\n";
+    }
+    if (dietaryInfo.lactoseFree) {
+        s += "Vegetarian\n";
+    }
+    s += "\n";
+    s += QString::number(nutrition.kcal).toStdString() + " kcal";
+    return s;
+}
+
+std::ostream &operator<<(std::ostream&o, Recipe &r) {
+    o << r.to_long_string();
     return o;
 }
 
 bool operator< (const Recipe &r1, const Recipe &r2) {
-    qDebug() << "< called - checking " + QString::number(r1.nutrition.kcal) + " and " + QString::number(r2.nutrition.kcal);
     return r1.nutrition.kcal < r2.nutrition.kcal;
 }
 bool operator> (const Recipe &r1, const Recipe &r2) {
-    qDebug() << "> called";
     return r1.nutrition.kcal > r2.nutrition.kcal;
 }

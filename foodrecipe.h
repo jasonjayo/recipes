@@ -14,6 +14,9 @@ public:
     int servings;
     int getServings();
     friend std::ostringstream &operator<<(std::ostringstream &o, const FoodRecipe &r);
+
+    std::string to_short_string();
+    std::string to_long_string();
 };
 
 #endif // FOODRECIPE_H

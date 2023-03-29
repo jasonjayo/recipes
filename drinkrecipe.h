@@ -11,6 +11,11 @@ public:
 
     bool alcoholic;
     QVBoxLayout* createCard();
+
+    std::string to_short_string();
+    std::string to_long_string();
+
+    QPushButton* viewBtn;
 };
 
 #endif // DRINKRECIPE_H

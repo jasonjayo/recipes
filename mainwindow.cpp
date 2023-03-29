@@ -29,7 +29,7 @@
 #define NUM_CARDS_PER_LINE 4
 #define GRID_TOP_OFFSET 1
 
-// global var
+// global vars
 QList<FoodRecipe*> foodRecipes;
 QList<DrinkRecipe*> drinkRecipes;
 
@@ -39,7 +39,7 @@ bool showDrinksOnly = false;
 bool showVeganOnly = false;
 bool showVegetarianOnly = false;
 
-int maxTime = 200;
+int maxTime = 100;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -48,8 +48,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     resetAct = new QAction("Reset list", this);
-    resetAct->setStatusTip("Reset the list of displayed recipes");
-    connect(resetAct, &QAction::triggered, this, &MainWindow::removeAllCards);
+    resetAct->setStatusTip("Reset the list filters to their initial state");
+
 
 #ifdef GRID_TOP_OFFSET
 
@@ -71,16 +71,16 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel* timeSliderLabel = new QLabel("Prep + cook time max.");
     QLabel* timeSliderValue = new QLabel(QString::number(maxTime) + " mins.");
     QHBoxLayout* timeSliderContainer = new QHBoxLayout();
-    QSlider* servingsSlider = new QSlider(Qt::Horizontal);
-    servingsSlider->setMaximumWidth(150);
+    QSlider* timeSlider = new QSlider(Qt::Horizontal);
+    timeSlider->setMaximumWidth(150);
     timeSliderContainer->addWidget(timeSliderLabel);
-    timeSliderContainer->addWidget(servingsSlider, Qt::AlignLeft);
+    timeSliderContainer->addWidget(timeSlider, Qt::AlignLeft);
     timeSliderContainer->addWidget(timeSliderValue);
     timeSliderContainer->addStretch(1);
-    connect(servingsSlider, &QSlider::sliderMoved, this, [=](int pos) {
-         maxTime = pos;
-         timeSliderValue->setText(QString::number(pos) + " mins.");
-         displayCards();
+    connect(timeSlider, &QSlider::sliderMoved, this, [=](int pos) {
+        maxTime = pos;
+        timeSliderValue->setText(QString::number(pos) + " mins.");
+        displayCards();
     });
     filtersVBox->addWidget(veganFilterBox);
     filtersVBox->addWidget(vegetarianFilterBox);
@@ -90,28 +90,69 @@ MainWindow::MainWindow(QWidget *parent)
     filtersVBox->addLayout(timeSliderContainer);
     filtersBox->setLayout(filtersVBox);
 
-    QPushButton* removeAllCardsBtn = new QPushButton("Remove all cards");
-    filtersVBox->addWidget(removeAllCardsBtn);
-    connect(removeAllCardsBtn, &QPushButton::clicked, this, &MainWindow::removeAllCards);
+//    QPushButton* removeAllCardsBtn = new QPushButton("Remove all cards");
+//    filtersVBox->addWidget(removeAllCardsBtn);
+//    connect(removeAllCardsBtn, &QPushButton::clicked, this, &MainWindow::removeAllCards);
 
     showAllFilterBtn->setChecked(true);
-    servingsSlider->setTickInterval(1);
-    servingsSlider->setMinimum(5);
-    servingsSlider->setMaximum(120);
+    timeSlider->setTickInterval(1);
+    timeSlider->setMinimum(5);
+    timeSlider->setMaximum(120);
+    timeSlider->setSliderPosition(maxTime);
+
+    filtersBox->setMaximumHeight(250);
+    filtersBox->setAlignment(Qt::AlignTop);
 
     ui->gridLayout->addWidget(filtersBox, 0, 1, 1, 3);
 
 
-    veganFilterBox->setChecked(true);
-    connect(veganFilterBox, &QCheckBox::stateChanged, this, &MainWindow::displayCards);
+    veganFilterBox->setChecked(showVeganOnly);
+    vegetarianFilterBox->setChecked(showVegetarianOnly);
+
     connect(veganFilterBox, &QCheckBox::stateChanged, this, [=]() {
-        qDebug() << "setting showVeganOnly to " << veganFilterBox->isChecked();
         showVeganOnly = veganFilterBox->isChecked();
         displayCards();
     });
 
-    // TODO: remove absolute file name
-    QFile recipesFile("C:/Users/jason/Desktop/College/Modules/CS4076/Project/recipes/recipes.json");
+    connect(vegetarianFilterBox, &QCheckBox::stateChanged, this, [=]() {
+        showVegetarianOnly = vegetarianFilterBox->isChecked();
+        displayCards();
+    });
+    connect(showFoodOnlyFilterBtn, &QRadioButton::clicked, this, [=]() {
+        qDebug() << "showFood only";
+        showFoodOnly = true;
+        showDrinksOnly = false;
+        displayCards();
+    });
+    connect(showDrinksOnlyFilterBtn, &QRadioButton::clicked, this, [=]() {
+        qDebug() << "showDrinks only";
+        showFoodOnly = false;
+        showDrinksOnly = true;
+        displayCards();
+    });
+    connect(showAllFilterBtn, &QRadioButton::clicked, this, [=]() {
+        showFoodOnly = false;
+        showDrinksOnly = false;
+        displayCards();
+    });
+
+
+    connect(resetAct, &QAction::triggered, this, [=]() {
+        showFoodOnly = showDrinksOnly = false;
+        showVeganOnly = showVegetarianOnly = false;
+        veganFilterBox->setChecked(false);
+        vegetarianFilterBox->setChecked(false);
+        showFoodOnlyFilterBtn->setChecked(false);
+        showDrinksOnlyFilterBtn->setChecked(false);
+        showAllFilterBtn->setChecked(true);
+        timeSlider->setValue(100);
+        timeSliderValue->setText("100 mins.");
+        maxTime = 100;
+        displayCards();
+    });
+
+            // TODO: remove absolute file name
+            QFile recipesFile("C:/Users/jason/Desktop/College/Modules/CS4076/Project/recipes/recipes.json");
     if (!recipesFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         throw new MissingFileException("recipes.json");
     }
@@ -214,22 +255,28 @@ MainWindow::MainWindow(QWidget *parent)
         //        i++;
 
 
-
     }
+
+    QPushButton* backBtn = new QPushButton("< Back");
+    connect(backBtn, &QPushButton::clicked, this, [=]() {
+        ui->stackedWidget->setCurrentIndex(0);
+    });
+    ui->gridLayout_p2->addWidget(backBtn);
+
 
     displayCards();
 
     // working on copy constructor
-//    qDebug() << &drinkRecipes.at(0)->instructions;
-//    DrinkRecipe copy = *drinkRecipes.at(0);
-//    qDebug() << &copy.instructions;
+    //    qDebug() << &drinkRecipes.at(0)->instructions;
+    //    DrinkRecipe copy = *drinkRecipes.at(0);
+    //    qDebug() << &copy.instructions;
 
-//    std::ostringstream buffer;
-//    buffer << drinkRecipes.at(0);
-//    QString str = QString::fromStdString(buffer.str());
-//    qDebug() << "Output: " << str;
+    //    std::ostringstream buffer;
+    //    buffer << drinkRecipes.at(0);
+    //    QString str = QString::fromStdString(buffer.str());
+    //    qDebug() << "Output: " << str;
 
-//qDebug() << *drinkRecipes.at(0) + *drinkRecipes.at(1);
+    //qDebug() << *drinkRecipes.at(0) + *drinkRecipes.at(1);
 
     if (*drinkRecipes.at(0) < *drinkRecipes.at(1)) {
         qDebug() << "0 is less than 1!";
@@ -238,11 +285,11 @@ MainWindow::MainWindow(QWidget *parent)
     std::cout << "blah: " << drinkRecipes.at(0);
 
     DrinkRecipe dr = *drinkRecipes.at(0);
-        std::cout << dr;
+    std::cout << dr;
 
     recipesFile.close();
 
-    //    ui->stackedWidget->setCurrentIndex(1);
+        ui->stackedWidget->setCurrentIndex(0);
     setCentralWidget(ui->scrollArea);
 
 }
@@ -251,47 +298,64 @@ void MainWindow::displayCards() {
     //qDebug() << "showing vegan only? " << showVeganOnly;
     removeAllCards();
 
-//    qDebug() << ui->gridLayout->count();
-//    for (int i = 2; i < ui->gridLayout->count(); i++) {
-//        QLayoutItem* l = ui->gridLayout->itemAt(i)->layout();
-//        qDebug() << "removing " << l;
-//        ui->gridLayout->removeItem(l);
-//    }
+    //    qDebug() << ui->gridLayout->count();
+    //    for (int i = 2; i < ui->gridLayout->count(); i++) {
+    //        QLayoutItem* l = ui->gridLayout->itemAt(i)->layout();
+    //        qDebug() << "removing " << l;
+    //        ui->gridLayout->removeItem(l);
+    //    }
 
+    qDebug() << "showDrinksOnly " << showDrinksOnly;
     int i = 0;
     if (!showDrinksOnly) {
-//        for (FoodRecipe* &r: foodRecipes) {
+
+        //        for (FoodRecipe* &r: foodRecipes) {
         for (int j = 0; j < foodRecipes.count(); j++) {
             FoodRecipe* r = foodRecipes.at(j);
-            if (showVeganOnly && !(r->vegan)) continue;
-            if (showVegetarianOnly && !(r->vegetarian)) continue;
+            if (showVeganOnly && !(r->dietaryInfo.vegan)) continue;
+            if (showVegetarianOnly && !(r->dietaryInfo.vegetarian)) continue;
             if (maxTime < (r->stats.prepTime + r->stats.cookTime)) continue;
 
             QVBoxLayout* recipeContainer = r->createCard();
+
 
             if (j + 1 < foodRecipes.count() && *r < *foodRecipes.at(j+1)) {
                 QLabel* l = new QLabel("Fewer calories (" + QString::number(r->nutrition.kcal) + ") than " + foodRecipes.at(j+1)->title + "(" + QString::number(foodRecipes.at(j+1)->nutrition.kcal) + ")!");
                 recipeContainer->insertWidget(recipeContainer->count() - 2, l);
             }
             ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
-//            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
+            //            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
             i++;
         }
     }
+
+    qDebug() << "showDrinksOnly " << showFoodOnly;
     if (!showFoodOnly) {
+
         for (int j = 0; j < drinkRecipes.count(); j++) {
             DrinkRecipe* r = drinkRecipes.at(j);
-            if (showVeganOnly && !(r->vegan)) continue;
-            if (showVegetarianOnly && !(r->vegetarian)) continue;
+            if (showVeganOnly && !(r->dietaryInfo.vegan)) continue;
+            if (showVegetarianOnly && !(r->dietaryInfo.vegetarian)) continue;
             if (maxTime < (r->stats.prepTime + r->stats.cookTime)) continue;
 
             QVBoxLayout* recipeContainer = r->createCard();
+
+            QPushButton* viewBtn = r->viewBtn;
+            connect(viewBtn, &QPushButton::clicked, this, [=]() {
+                qDebug() << "viewBtn clicked!";
+                ui->stackedWidget->setCurrentIndex(1);
+
+                QLabel* title = new QLabel(r->title);
+                ui->gridLayout_p2->addWidget(title);
+
+            });
+
             if (j + 1 < drinkRecipes.count() && *r < *drinkRecipes.at(j+1)) {
                 QLabel* l = new QLabel("Fewer calories (" + QString::number(r->nutrition.kcal) + ") than " + drinkRecipes.at(j+1)->title + " (" + QString::number(drinkRecipes.at(j+1)->nutrition.kcal) + ")!");
                 recipeContainer->insertWidget(recipeContainer->count() - 2, l);
             }
             ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
-//            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
+            //            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
             i++;
         }
     }
@@ -300,41 +364,41 @@ void MainWindow::displayCards() {
 void MainWindow::removeAllCards() {
     qDebug() << "grid count: " << ui->gridLayout->count();
 
-//    QVBoxLayout *child;
-//    while ((child = static_cast<QVBoxLayout*>(ui->gridLayout->takeAt(2))) != nullptr) {
-//        qDebug() << "removing";
-////        delete child->widget(); // delete the widget
-////        delete child;   // delete the layout item=
-////        child->deleteLater();
+    //    QVBoxLayout *child;
+    //    while ((child = static_cast<QVBoxLayout*>(ui->gridLayout->takeAt(2))) != nullptr) {
+    //        qDebug() << "removing";
+    ////        delete child->widget(); // delete the widget
+    ////        delete child;   // delete the layout item=
+    ////        child->deleteLater();
 
-//    }
-//    delete ui->gridLayout->itemAt(0);
-//    ui->gridLayout->update();
-//    for (int i = 2; i < ui->gridLayout->count(); i++) {
-//        ui->gridLayout->takeAt(i);
-//        QLayoutItem* l = ui->gridLayout->itemAt(i)->layout();
-//        qDebug() << "removing " << l;
-//       ui->gridLayout->removeItem(l);
-//      delete l;
-//       ui->gridLayout->update();
-//    }
+    //    }
+    //    delete ui->gridLayout->itemAt(0);
+    //    ui->gridLayout->update();
+    //    for (int i = 2; i < ui->gridLayout->count(); i++) {
+    //        ui->gridLayout->takeAt(i);
+    //        QLayoutItem* l = ui->gridLayout->itemAt(i)->layout();
+    //        qDebug() << "removing " << l;
+    //       ui->gridLayout->removeItem(l);
+    //      delete l;
+    //       ui->gridLayout->update();
+    //    }
 
     for (int i = 2; i < ui->gridLayout->count(); i++) {
-//        QLayout* layout = ui->gridLayout->itemAt(i)->layout();
+        //        QLayout* layout = ui->gridLayout->itemAt(i)->layout();
         clearWidgets(ui->gridLayout, 2);
-//        for (int k = 0; k < layout->count(); k++) {
-//            layout->takeAt(k);
-//        }
+        //        for (int k = 0; k < layout->count(); k++) {
+        //            layout->takeAt(k);
+        //        }
     }
     qDebug() << "grid count after: " << ui->gridLayout->count();
 }
 
 void MainWindow::clearWidgets(QLayout * layout, int startIndex) {
-   if (!layout) return;
-   while (auto item = layout->takeAt(startIndex)) {
-      delete item->widget();
-      clearWidgets(item->layout(), 0);
-   }
+    if (!layout) return;
+    while (auto item = layout->takeAt(startIndex)) {
+        delete item->widget();
+        clearWidgets(item->layout(), 0);
+    }
 }
 
 void MainWindow::contextMenuEvent(QContextMenuEvent *event) {

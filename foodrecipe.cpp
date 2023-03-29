@@ -43,11 +43,14 @@ QVBoxLayout* FoodRecipe::createCard() {
 //    image->setPixmap(pix.scaled(300, 200));
     image->setPixmap(pix.scaledToWidth((width - 200) / 4));
 
+    image->setToolTip(QString::fromStdString(to_long_string()));
+
+
     // title
     QLabel* titleLabel = Recipe::getCardTitleComponent();
     recipeContainer->addWidget(titleLabel);
 
-    QHBoxLayout* labels = getLabelsComponent(this);
+    QHBoxLayout* labels = RecipeUtils::getLabelsComponent(this);
     recipeContainer->addLayout(labels);
 
 
@@ -57,8 +60,8 @@ QVBoxLayout* FoodRecipe::createCard() {
     // serving count
     QLabel* stats_servingCountIconLabel = new QLabel;
     QPixmap stats_servingCountIcon(":/images/icon_restaurant.svg");
-    QLabel* stats_servingCountValueLabel = new QLabel(QString::number(servings));
-    stats_servingCountValueLabel->setStyleSheet("background: #fff;");
+    QLabel* stats_servingCountValueLabel = new QLabel("Serves " + QString::number(servings));
+    stats_servingCountValueLabel->setStyleSheet("background: #fff;padding:5px;");
     stats_servingCountIconLabel->setPixmap(stats_servingCountIcon);
     statsGrid->addWidget(stats_servingCountIconLabel, 1, 0);
     statsGrid->addWidget(stats_servingCountValueLabel, 1, 1, 1, 4);
@@ -86,6 +89,14 @@ QVBoxLayout* FoodRecipe::createCard() {
     recipeContainer->addWidget(viewBtn);
 
     return recipeContainer;
+}
+
+std::string FoodRecipe::to_short_string() {
+    return title.toStdString() + " - " + description.toStdString();
+}
+
+std::string FoodRecipe::to_long_string() {
+    return "Food recipe:\n" + Recipe::to_long_string();
 }
 
 std::ostringstream &operator<<(std::ostringstream &o, const FoodRecipe &r) {

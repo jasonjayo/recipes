@@ -31,12 +31,14 @@ QVBoxLayout* DrinkRecipe::createCard() {
 
 //    image->setStyleSheet("QLabel { image: url(:/images/" + photos.first() + ")}");
 
+    image->setToolTip(QString::fromStdString(to_long_string()));
+
 
     // title
     QLabel* titleLabel = Recipe::getCardTitleComponent();
     recipeContainer->addWidget(titleLabel);
 
-    QHBoxLayout* labels = getLabelsComponent(this);
+    QHBoxLayout* labels = RecipeUtils::getLabelsComponent(this);
     recipeContainer->addLayout(labels);
 
     // stats grid
@@ -60,9 +62,18 @@ QVBoxLayout* DrinkRecipe::createCard() {
 
 
     // view button
-    QPushButton* viewBtn = Recipe::getCardButtonComponent();
+    viewBtn = Recipe::getCardButtonComponent();
     recipeContainer->addWidget(viewBtn);
 
     return recipeContainer;
 }
+
+std::string DrinkRecipe::to_short_string() {
+    return title.toStdString() + " - " + description.toStdString();
+}
+
+std::string DrinkRecipe::to_long_string() {
+    return "Drink recipe:\n" + Recipe::to_long_string();
+}
+
 

@@ -15,7 +15,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     missingfileexception.cpp \
-    recipe.cpp
+    recipe.cpp \
+    stringable.cpp
 
 HEADERS += \
     drinkrecipe.h \
@@ -24,6 +25,7 @@ HEADERS += \
     mainwindow.h \
     missingfileexception.h \
     recipe.h \
+    stringable.h \
     utils.h
 
 FORMS += \

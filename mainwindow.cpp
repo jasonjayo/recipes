@@ -41,6 +41,21 @@ bool showVegetarianOnly = false;
 
 int maxTime = 100;
 
+QVBoxLayout* rd_box;
+QLabel* rd_title;
+QLabel* rd_description;
+
+QLabel* rd_image;
+
+QTextEdit* rd_stats;
+
+QTextEdit* rd_ingredients;
+QTextEdit* rd_nutrition;
+
+QTextEdit* rd_diateryInfo;
+
+QTextEdit* rd_instructions;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -50,6 +65,21 @@ MainWindow::MainWindow(QWidget *parent)
     resetAct = new QAction("Reset list", this);
     resetAct->setStatusTip("Reset the list filters to their initial state");
 
+
+    rd_box = new QVBoxLayout();
+    rd_title = new QLabel();
+    rd_description = new QLabel();
+
+    rd_image = new QLabel();
+
+    rd_stats = new QTextEdit();
+
+    rd_ingredients = new QTextEdit();
+    rd_nutrition = new QTextEdit();
+
+    rd_diateryInfo = new QTextEdit();
+
+    rd_instructions = new QTextEdit();
 
 #ifdef GRID_TOP_OFFSET
 
@@ -263,6 +293,19 @@ MainWindow::MainWindow(QWidget *parent)
     });
     ui->gridLayout_p2->addWidget(backBtn);
 
+    // set up recipe details page
+    rd_box->addWidget(rd_title);
+    rd_box->addWidget(rd_description);
+    rd_box->addWidget(rd_image);
+    rd_box->addWidget(rd_stats);
+    rd_box->addWidget(rd_ingredients);
+    rd_box->addWidget(rd_nutrition);
+    rd_box->addWidget(rd_diateryInfo);
+    rd_box->addWidget(rd_instructions);
+
+    ui->gridLayout_p2->addLayout(rd_box, 1, 0);
+
+
 
     displayCards();
 
@@ -345,8 +388,22 @@ void MainWindow::displayCards() {
                 qDebug() << "viewBtn clicked!";
                 ui->stackedWidget->setCurrentIndex(1);
 
-                QLabel* title = new QLabel(r->title);
-                ui->gridLayout_p2->addWidget(title);
+                rd_title->setText(r->title);
+                rd_description->setText(r->description);
+                QPixmap pm(":/images/" + r->photos.at(0));
+                rd_image->setPixmap(pm);
+                rd_stats->insertHtml("<ul><li>Prep time: " + QString::number(r->stats.prepTime) + "</li>" +
+                                     "<li>Cook time: " + QString::number(r->stats.cookTime) + "</li>" +
+                                     "<li>Difficulty: " + QString::number(r->stats.difficulty) + "</li></ul>"
+                );
+
+                QString instructionsHtml;
+                instructionsHtml += "<ul>";
+                for (int l = 0; l < r->ingredients.length(); l++) {
+                    instructionsHtml += "<li>" + r->ingredients.at(l).title + "</li>";
+                }
+                instructionsHtml += "</ul>";
+                rd_instructions->setHtml(instructionsHtml);
 
             });
 

@@ -15,7 +15,8 @@ public:
     QVBoxLayout* createCard();
     std::string to_short_string();
     std::string to_long_string();
-
+    QString getDescription();
+    QLabel* getCardDescriptionComponent();
 };
 
 #endif // DRINKRECIPE_H

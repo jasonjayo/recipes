@@ -1,10 +1,9 @@
 #include "drinkrecipe.h"
-#include "qscreen.h"
 #include "utils.h"
 
 #include <QLabel>
 #include <QPushButton>
-#include <qguiapplication.h>
+#include <Qguiapplication>
 #include <QHBoxLayout>
 
 DrinkRecipe::DrinkRecipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients, Nutrition nutrition, QList<QString> instructions, DietaryInfo dietaryInfo, bool alcoholic)
@@ -19,14 +18,8 @@ QVBoxLayout* DrinkRecipe::createCard() {
     recipeContainer->setSpacing(10);
 
     // image
-    QLabel* image = new QLabel();
-    QPixmap pix(":/images/" + photos.first());
+    QLabel* image = Recipe::getCardPhotosComponent();
     recipeContainer->addWidget(image);
-    QScreen *screen = QGuiApplication::primaryScreen();
-    int width = screen->geometry().width();
-    image->setScaledContents(true);
-    image->setPixmap(pix.scaledToWidth((width - 200) / 4));
-    image->setToolTip(QString::fromStdString(to_long_string()));
 
     // title
     QLabel* titleLabel = getCardTitleComponent();
@@ -40,7 +33,7 @@ QVBoxLayout* DrinkRecipe::createCard() {
     recipeContainer->addLayout(statsGrid);
 
     // description
-    QLabel* descriptionLabel = Recipe::getCardDescriptionComponent();
+    QLabel* descriptionLabel = getCardDescriptionComponent();
     recipeContainer->addWidget(descriptionLabel);
 
     // view button
@@ -48,6 +41,20 @@ QVBoxLayout* DrinkRecipe::createCard() {
     recipeContainer->addWidget(viewBtn);
 
     return recipeContainer;
+}
+
+QLabel* DrinkRecipe::getCardDescriptionComponent() {
+    QLabel* descriptionLabel = Recipe::getCardDescriptionComponent();
+    if (alcoholic) {
+        descriptionLabel->setText(descriptionLabel->text() + "<br><br><i>Contains alcohol</i>");
+        descriptionLabel->setTextFormat(Qt::RichText);
+    }
+    return descriptionLabel;
+}
+
+QString DrinkRecipe::getDescription() {
+    if (alcoholic) return description + " " + "<i>Contains alcohol.</i>";
+    return description;
 }
 
 std::string DrinkRecipe::to_short_string() {

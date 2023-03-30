@@ -5,9 +5,7 @@
 #include <QPushButton>
 #include <QScreen>
 #include <QVBoxLayout>
-
-#include "qscreen.h"
-#include <qguiapplication.h>
+#include <Qguiapplication>
 
 #include <sstream>
 #include <iostream>
@@ -30,15 +28,8 @@ QVBoxLayout* FoodRecipe::createCard() {
     recipeContainer->setSpacing(10);
 
     // image
-    QLabel* image = new QLabel();
-    QPixmap pix(":/images/" + photos.first());
+    QLabel* image = Recipe::getCardPhotosComponent();
     recipeContainer->addWidget(image);
-    QScreen *screen = QGuiApplication::primaryScreen();
-    int width = screen->geometry().width();
-    image->setScaledContents(true);
-    image->setPixmap(pix.scaledToWidth((width - 200) / 4));
-    image->setToolTip(QString::fromStdString(to_long_string()));
-
 
     // title
     QLabel* titleLabel = Recipe::getCardTitleComponent();

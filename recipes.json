@@ -1,17 +1,17 @@
 [
   {
-    "title": "Classic Victoria sandwich recipe",
+    "title": "Classic Cake",
     "type": "drink",
-    "description": "The perfect party cake, a Victoria sponge is a traditional bake everyone will love. Makes an easy wedding cake, too",
+    "description": "The perfect party cake, a Victoria sponge is a traditional bake everyone will love. Makes an easy wedding cake, too.",
     "photos": ["cake.jpg"],
     "stats": {
       "times": {
         "prep": 40,
         "cook": 20
       },
-      "difficulty": 0,
-      "serves": 4
+      "difficulty": 0
     },
+    "serves": 4,
     "ingredients": [
       {
         "name": "caster sugar",
@@ -64,14 +64,13 @@
       "salt": 0.9
     },
     "allergens": [],
+    "alcholic": false,
     "dietaryInfo": {
       "vegetarian": true,
       "vegan": true,
-      "lactoseFree": true,
+      "lactoseFree": false,
       "glutenFree": false
     },
-    "vegan": false,
-    "vegetarian": false,
     "instructions": [
       "Heat oven to 190C/fan 170C/gas 5. Butter two 20cm sandwich tins and line with non-stick baking paper.",
       "In a large bowl, beat 200g caster sugar, 200g softened butter, 4 beaten eggs, 200g self-raising flour, 1 tsp baking powder and 2 tbsp milk together until you have a smooth, soft batter.",

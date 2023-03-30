@@ -6,6 +6,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QObject>
+#include <QGuiApplication>
+#include "Qscreen"
 
 Recipe::Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients, Nutrition nutrition, QList<QString> instructions, DietaryInfo dietaryInfo)
     : title(title), description(description), photos(photos), dietaryInfo(dietaryInfo), stats(stats), ingredients(ingredients), nutrition(nutrition), instructions(instructions)
@@ -64,16 +66,36 @@ QGridLayout* Recipe::getCardStatsGridComponent() {
 QLabel* Recipe::getCardDescriptionComponent() {
     QLabel* descriptionLabel = new QLabel(description);
     descriptionLabel->setWordWrap(true);
-    descriptionLabel->setStyleSheet("background:#fff; padding: 6px;border: 4px solid #cfcfcf");
+    descriptionLabel->setStyleSheet("background:#fff; padding: 6px;border: 4px solid #e0e0e0");
     return descriptionLabel;
 }
 
 QPushButton* Recipe::getCardButtonComponent() {
     QPushButton* viewBtn = new QPushButton;
     viewBtn->setText("View recipe");
-    viewBtn->setStyleSheet("QPushButton { background: #cfcfcf; border: none; padding: 8px 0; font-weight:bold; text-transform:uppercase; font-size: 12px; }QPushButton:hover {background: #fff}");
+    viewBtn->setStyleSheet("QPushButton { background: #e0e0e0; border: none; padding: 12px 0; font-weight:bold; text-transform:uppercase; font-size: 12px; }QPushButton:hover {background: #fff}");
 
     return viewBtn;
+}
+
+QLabel* Recipe::getCardPhotosComponent() {
+    QLabel* image = new QLabel();
+    QPixmap pix(":/images/" + photos.first());
+    QScreen *screen = QGuiApplication::primaryScreen();
+    int width = screen->geometry().width();
+    image->setScaledContents(true);
+    image->setPixmap(pix.scaledToWidth((width - 200) / 4));
+    image->setToolTip(QString::fromStdString(to_long_string()));
+    return image;
+}
+
+QString Recipe::getDescription() {
+    return description;
+}
+
+// destructor & memory management
+Recipe::~Recipe() {
+    delete viewBtn;
 }
 
 std::string Recipe::to_long_string() {

@@ -183,7 +183,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     QPushButton* backBtn = new QPushButton("< Back");
-//    backBtn->setMaximumWidth(100);
+    //    backBtn->setMaximumWidth(100);
     connect(backBtn, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(0);
     });
@@ -209,6 +209,7 @@ MainWindow::MainWindow(QWidget *parent)
     QString data = recipesFile.readAll();
     QJsonDocument json = QJsonDocument::fromJson(data.toUtf8());
     QJsonArray recipesJsonArr = json.array();
+
 
     // for each recipe
     for (const QJsonValue &recipeJsonObj : recipesJsonArr) {
@@ -272,20 +273,13 @@ MainWindow::MainWindow(QWidget *parent)
             instructions.push_back(instructionVal.toString());
         }
 
-        //        Recipe* r;
         if (recipeType == "food") {
             FoodRecipe* recipeObj = new FoodRecipe(title, description, photos, recipeStats, ingredients, nutrition, instructions, diateryInfo, recipeJsonObj["serves"].toInt());
             foodRecipes.push_back(recipeObj);
-            //            r = recipeObj;
         } else {
-            DrinkRecipe* recipeObj = new DrinkRecipe(title, description, photos, recipeStats, ingredients, nutrition, instructions, diateryInfo, false);
+            DrinkRecipe* recipeObj = new DrinkRecipe(title, description, photos, recipeStats, ingredients, nutrition, instructions, diateryInfo, recipeJsonObj["alcoholic"].toBool());
             drinkRecipes.push_back(recipeObj);
-            //            r = recipeObj;
         }
-
-        //        qDebug() << static_cast<FoodRecipe*>(recipeObj)->getServings();
-        //        recipeContainer
-
     }
 
     recipesFile.close();
@@ -301,9 +295,10 @@ MainWindow::MainWindow(QWidget *parent)
      */
 
     rd_grid = new QGridLayout();
+    rd_grid->setSpacing(9);
     rd_title = new QLabel();
     rd_description = new QLabel();
-//    rd_description->setWordWrap(true);
+    rd_description->setWordWrap(true);
     rd_image = new QLabel();
     rd_stats = new QLabel();
     rd_ingredients = new QLabel();
@@ -320,10 +315,11 @@ MainWindow::MainWindow(QWidget *parent)
     rd_grid->addWidget(rd_nutrition, 4, 2);
     rd_grid->addWidget(rd_instructions, 5, 0, 1, 3);
 
-    QString centralStylesheet = "border: 8px solid #fff;padding: 10px;border-radius:12px;";
-    rd_stats->setStyleSheet(centralStylesheet);
-    rd_ingredients->setStyleSheet(centralStylesheet);
-    rd_nutrition->setStyleSheet(centralStylesheet);
+    QString rd_sectionStylesheet = "border: 8px solid #fff;padding: 10px;border-radius:12px;background: #e0e0e0;";
+    rd_stats->setStyleSheet(rd_sectionStylesheet);
+    rd_ingredients->setStyleSheet(rd_sectionStylesheet);
+    rd_nutrition->setStyleSheet(rd_sectionStylesheet);
+    rd_instructions->setStyleSheet(rd_sectionStylesheet);
     rd_stats->setAlignment(Qt::AlignTop);
     rd_nutrition->setAlignment(Qt::AlignTop);
     rd_ingredients->setAlignment(Qt::AlignTop);
@@ -386,7 +382,7 @@ void MainWindow::displayCards() {
 
             rd_title->setText(r->title);
             rd_title->setStyleSheet("font-size: 30px;font-weight:bold;");
-            rd_description->setText(r->description);
+            rd_description->setText(r->getDescription());
             QPixmap pm(":/images/" + r->photos.at(0));
             rd_image->setPixmap(pm.scaledToWidth(400));
             rd_stats->setText("<h1>Stats</h1><ul><li>Prep time: " + QString::number(r->stats.prepTime) + "</li>" +

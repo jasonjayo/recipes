@@ -58,7 +58,9 @@ public:
     QPushButton* viewBtn;
 
     Recipe(const Recipe &otherRecipe);
+    ~Recipe();
     virtual QVBoxLayout* createCard() = 0;
+    virtual QString getDescription();
     friend std::ostream &operator<<(std::ostream &o, Recipe &r);
     friend bool operator< (const Recipe &r1, const Recipe &r2);
     friend bool operator> (const Recipe &r1, const Recipe &r2);
@@ -69,6 +71,7 @@ protected:
     virtual QGridLayout *getCardStatsGridComponent();
     virtual QLabel *getCardDescriptionComponent();
     virtual QPushButton *getCardButtonComponent();
+    virtual QLabel *getCardPhotosComponent();
 };
 
 #endif // RECIPE_H

@@ -1,0 +1,86 @@
+[
+  {
+    "title": "Classic Victoria sandwich recipe",
+    "type": "drink",
+    "description": "The perfect party cake, a Victoria sponge is a traditional bake everyone will love. Makes an easy wedding cake, too",
+    "photos": ["cake.jpg"],
+    "stats": {
+      "times": {
+        "prep": 40,
+        "cook": 20
+      },
+      "difficulty": 0,
+      "serves": 4
+    },
+    "ingredients": [
+      {
+        "name": "caster sugar",
+        "quantity": "200g"
+      },
+      {
+        "name": "softened butter",
+        "quantity": "200g"
+      },
+      {
+        "name": "eggs, beaten",
+        "quantity": "4"
+      },
+      {
+        "name": "self-raising flour",
+        "quantity": "200"
+      },
+      {
+        "name": "baking powder",
+        "quantity": "1 tsp"
+      },
+      {
+        "name": "butter, softened",
+        "quantity": "100g"
+      },
+      {
+        "name": "icing sugar, sifted",
+        "quantity": "140g"
+      },
+      {
+        "name": "vanilla extract",
+        "quantity": "drop"
+      },
+      {
+        "name": "strawberry jam",
+        "quantity": "120g"
+      },
+      {
+        "name": "icing sugar"
+      }
+    ],
+    "nutrition": {
+      "kcal": 558,
+      "fat": 20,
+      "saturates": 17,
+      "carbs": 76,
+      "sugars": 57,
+      "fibre": 0.6,
+      "protein": 5,
+      "salt": 0.9
+    },
+    "allergens": [],
+    "dietaryInfo": {
+      "vegetarian": true,
+      "vegan": true,
+      "lactoseFree": true,
+      "glutenFree": false
+    },
+    "vegan": false,
+    "vegetarian": false,
+    "instructions": [
+      "Heat oven to 190C/fan 170C/gas 5. Butter two 20cm sandwich tins and line with non-stick baking paper.",
+      "In a large bowl, beat 200g caster sugar, 200g softened butter, 4 beaten eggs, 200g self-raising flour, 1 tsp baking powder and 2 tbsp milk together until you have a smooth, soft batter.",
+      "Divide the mixture between the tins, smooth the surface with a spatula or the back of a spoon.",
+      "Bake for about 20 mins until golden and the cake springs back when pressed.",
+      "Turn onto a cooling rack and leave to cool completely.",
+      "To make the filling, beat the 100g softened butter until smooth and creamy, then gradually beat in 140g sifted icing sugar and a drop of vanilla extract (if you’re using it).",
+      "Spread the buttercream over the bottom of one of the sponges. Top it with 170g strawberry jam and sandwich the second sponge on top.",
+      "Dust with a little icing sugar before serving. Keep in an airtight container and eat within 2 days."
+    ]
+  }
+]

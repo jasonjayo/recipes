@@ -317,15 +317,16 @@ MainWindow::MainWindow(QWidget *parent)
     rd_grid->addWidget(rd_title, 0, 0);
     rd_grid->addWidget(rd_description, 1, 0, 0, 3);
     rd_grid->addWidget(rd_image, 2, 0, 1, 2);
-    rd_grid->addWidget(rd_stats, 3, 0);
+    rd_grid->addLayout(rd_diateryInfo, 3, 0, 1, 3);
+    rd_grid->addWidget(rd_stats, 4, 0);
     QString centralStylesheet = "border: 4px solid #fff;padding: 10px;border-radius:6px;";
     rd_stats->setStyleSheet(centralStylesheet);
     rd_ingredients->setStyleSheet(centralStylesheet);
     rd_nutrition->setStyleSheet(centralStylesheet);
 
-    rd_grid->addWidget(rd_ingredients, 3, 1);
-    rd_grid->addWidget(rd_nutrition, 3, 2);
-    rd_grid->addWidget(rd_instructions, 4, 0, 1, 3);
+    rd_grid->addWidget(rd_ingredients, 4, 1);
+    rd_grid->addWidget(rd_nutrition, 4, 2);
+    rd_grid->addWidget(rd_instructions, 5, 0, 1, 3);
     rd_stats->setAlignment(Qt::AlignTop);
     rd_nutrition->setAlignment(Qt::AlignTop);
     rd_ingredients->setAlignment(Qt::AlignTop);
@@ -348,14 +349,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     //qDebug() << *drinkRecipes.at(0) + *drinkRecipes.at(1);
 
-    if (*drinkRecipes.at(0) < *drinkRecipes.at(1)) {
-        qDebug() << "0 is less than 1!";
-    }
+//    if (*drinkRecipes.at(0) < *drinkRecipes.at(1)) {
+//        qDebug() << "0 is less than 1!";
+//    }
 
-    std::cout << "blah: " << drinkRecipes.at(0);
+//    std::cout << "blah: " << drinkRecipes.at(0);
 
-    DrinkRecipe dr = *drinkRecipes.at(0);
-    std::cout << dr;
+//    DrinkRecipe dr = *drinkRecipes.at(0);
+//    std::cout << dr;
 
     recipesFile.close();
 

@@ -1,3 +1,13 @@
+/*
+ * Jason Gill 21304092
+ *
+ * GitHub repo: https://github.com/jasonjayo/recipes
+ *
+ * Recipes sourced from https://bbcgoodfood.com/
+ * Images from https://pixabay.com/
+ * Icons from https://fonts.google.com/icons
+ */
+
 #include "mainwindow.h"
 
 #include <QApplication>

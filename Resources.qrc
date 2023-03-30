@@ -5,6 +5,11 @@
         <file>icon_clock.svg</file>
         <file>icon_restaurant.svg</file>
         <file>cake.jpg</file>
+        <file>classic-cake.jpg</file>
+        <file>yogurt.jpg</file>
+        <file>mocktail.jpg</file>
+        <file>mojito.jpg</file>
+        <file>banana.jpg</file>
     </qresource>
     <qresource prefix="/recipes">
         <file>recipes.json</file>

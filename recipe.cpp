@@ -16,14 +16,13 @@ Recipe::Recipe(QString title, QString description, QList<QString> photos, Recipe
 
 // deep copy constructor
 Recipe::Recipe(const Recipe& otherRecipe) {
-    qDebug() << "copy";
     title = QString(otherRecipe.title);
     description = QString(otherRecipe.description);
     // deep copy performed for QList automatically by Qt when this copy modified, so otherRecipe doesn't get modified   as well
     photos = otherRecipe.photos;
     stats.cookTime = otherRecipe.stats.cookTime;
     stats.prepTime = otherRecipe.stats.prepTime;
-    stats.difficulty = otherRecipe.stats.difficulty;
+    stats.difficulty.numericalVal = otherRecipe.stats.difficulty.numericalVal;
     ingredients = otherRecipe.ingredients;
     nutrition.carbs = otherRecipe.nutrition.carbs;
     nutrition.fat = otherRecipe.nutrition.fat;
@@ -33,8 +32,6 @@ Recipe::Recipe(const Recipe& otherRecipe) {
     nutrition.salt = otherRecipe.nutrition.salt;
     nutrition.saturates = otherRecipe.nutrition.saturates;
     nutrition.sugars = otherRecipe.nutrition.sugars;
-    vegan = otherRecipe.vegan;
-    vegetarian = otherRecipe.vegetarian;
     instructions = otherRecipe.instructions;
 }
 
@@ -110,7 +107,7 @@ std::string Recipe::to_long_string() {
     if (dietaryInfo.vegan) {
         s += "Vegan\n";
     }
-    if (dietaryInfo.lactoseFree) {
+    if (dietaryInfo.vegetarian) {
         s += "Vegetarian\n";
     }
     s += "\n";

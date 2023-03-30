@@ -151,13 +151,11 @@ MainWindow::MainWindow(QWidget *parent)
         displayCards();
     });
     connect(showFoodOnlyFilterBtn, &QRadioButton::clicked, this, [=]() {
-        qDebug() << "showFood only";
         showFoodOnly = true;
         showDrinksOnly = false;
         displayCards();
     });
     connect(showDrinksOnlyFilterBtn, &QRadioButton::clicked, this, [=]() {
-        qDebug() << "showDrinks only";
         showFoodOnly = false;
         showDrinksOnly = true;
         displayCards();
@@ -229,12 +227,15 @@ MainWindow::MainWindow(QWidget *parent)
         QJsonObject stats_time = stats["times"].toObject();
         int stats_time_prep(stats_time.value("prep").toInt());
         int stats_time_cook(stats_time.value("cook").toInt());
-        int stats_difficulty(stats_time.value("difficulty").toInt());
+        int stats_difficulty(stats.value("difficulty").toInt());
+
 
         RecipeStats recipeStats;
         recipeStats.cookTime = stats_time_cook;
         recipeStats.prepTime = stats_time_prep;
-        recipeStats.difficulty = stats_difficulty;
+        Difficulty d;
+        d.numericalVal = stats_difficulty;
+        recipeStats.difficulty = d;
 
         QList<Ingredient> ingredients;
         QJsonArray ingredientsJsonArray = recipeJsonObj["ingredients"].toArray();
@@ -315,16 +316,28 @@ MainWindow::MainWindow(QWidget *parent)
     rd_grid->addWidget(rd_nutrition, 4, 2);
     rd_grid->addWidget(rd_instructions, 5, 0, 1, 3);
 
-    QString rd_sectionStylesheet = "border: 8px solid #fff;padding: 10px;border-radius:12px;background: #e0e0e0;";
+    QString rd_sectionStylesheet = "background: #fff;padding: 10px;border-radius:12px;border: 8px solid #e0e0e0;";
     rd_stats->setStyleSheet(rd_sectionStylesheet);
     rd_ingredients->setStyleSheet(rd_sectionStylesheet);
     rd_nutrition->setStyleSheet(rd_sectionStylesheet);
     rd_instructions->setStyleSheet(rd_sectionStylesheet);
+    rd_instructions->setWordWrap(true);
     rd_stats->setAlignment(Qt::AlignTop);
     rd_nutrition->setAlignment(Qt::AlignTop);
     rd_ingredients->setAlignment(Qt::AlignTop);
 
     ui->gridLayout_p2->addLayout(rd_grid, 1, 0, 1, 3);
+
+//    ui->gridLayout_p2->setRowStretch(1, 0);
+//    ui->gridLayout_p2->setRowStretch(0, 0);
+//    rd_grid->setRowStretch(0, 0);
+//    rd_grid->setRowStretch(1, 0);
+//    rd_grid->setRowStretch(2, 0);
+//    rd_grid->setRowStretch(3, 0);
+//    rd_grid->setRowStretch(4, 0);
+//    rd_grid->setRowStretch(5, 0);
+//    QSpacerItem* spacer = new QSpacerItem(0, 500, QSizePolicy::Maximum, QSizePolicy::Maximum);
+//    ui->gridLayout_p2->addItem(spacer, 2, 0);
 
     /*
      *  END RECIPE DETAILS PAGE UI SET UP
@@ -387,7 +400,7 @@ void MainWindow::displayCards() {
             rd_image->setPixmap(pm.scaledToWidth(400));
             rd_stats->setText("<h1>Stats</h1><ul><li>Prep time: " + QString::number(r->stats.prepTime) + "</li>" +
                               "<li>Cook time: " + QString::number(r->stats.cookTime) + "</li>" +
-                              "<li>Difficulty: " + QString::number(r->stats.difficulty) + "</li></ul>"
+                              "<li>Difficulty level: " + (char) (r->stats.difficulty.difficultyScale + 65) + "</li></ul>"
                               );
 
             removeWidgets(rd_diateryInfo);
@@ -396,7 +409,7 @@ void MainWindow::displayCards() {
             QString ingredientsHtml;
             ingredientsHtml += "<h1>Ingredients</h1><ul>";
             for (int l = 0; l < r->ingredients.length(); l++) {
-                ingredientsHtml += "<li>" + r->ingredients.at(l).title + "</li>";
+                ingredientsHtml += "<li>" + r->ingredients.at(l).quantity + " " + r->ingredients.at(l).title + "</li>";
             }
             ingredientsHtml += "</ul>";
             rd_ingredients->setText(ingredientsHtml);
@@ -422,12 +435,13 @@ void MainWindow::displayCards() {
 
         });
 
-        if (j + 1 < drinkRecipes.count() && *r < *drinkRecipes.at(j+1)) {
-            QLabel* l = new QLabel("Fewer calories (" + QString::number(r->nutrition.kcal) + ") than " + drinkRecipes.at(j+1)->title + " (" + QString::number(drinkRecipes.at(j+1)->nutrition.kcal) + ")!");
+        if (j + 1 < recipes.count() && *r < *recipes.at(j+1)) {
+            QLabel* l = new QLabel("Fewer calories (" + QString::number(r->nutrition.kcal) + ") than " + recipes.at(j+1)->title + " (" + QString::number(recipes.at(j+1)->nutrition.kcal) + ")!");
             recipeContainer->insertWidget(recipeContainer->count() - 2, l);
         }
         ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
         //            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
+        ui->gridLayout->setRowStretch((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 0);
         i++;
     }
 }

@@ -1,9 +1,9 @@
 [
   {
     "title": "Classic Cake",
-    "type": "drink",
-    "description": "The perfect party cake, a Victoria sponge is a traditional bake everyone will love. Makes an easy wedding cake, too.",
-    "photos": ["cake.jpg"],
+    "type": "food",
+    "description": "The perfect party cake, a traditional cake everyone will love.",
+    "photos": ["classic-cake.jpg"],
     "stats": {
       "times": {
         "prep": 40,
@@ -15,11 +15,11 @@
     "ingredients": [
       {
         "name": "caster sugar",
-        "quantity": "200g"
+        "quantity": "197g"
       },
       {
         "name": "softened butter",
-        "quantity": "200g"
+        "quantity": "209g"
       },
       {
         "name": "eggs, beaten",
@@ -27,7 +27,7 @@
       },
       {
         "name": "self-raising flour",
-        "quantity": "200"
+        "quantity": "195"
       },
       {
         "name": "baking powder",
@@ -47,39 +47,466 @@
       },
       {
         "name": "strawberry jam",
-        "quantity": "120g"
+        "quantity": "125g"
       },
       {
         "name": "icing sugar"
       }
     ],
     "nutrition": {
-      "kcal": 558,
+      "kcal": 560,
       "fat": 20,
-      "saturates": 17,
+      "saturates": 13,
       "carbs": 76,
-      "sugars": 57,
+      "sugars": 68,
       "fibre": 0.6,
-      "protein": 5,
+      "protein": 2,
       "salt": 0.9
     },
     "allergens": [],
-    "alcholic": false,
     "dietaryInfo": {
-      "vegetarian": true,
-      "vegan": true,
+      "vegetarian": false,
+      "vegan": false,
       "lactoseFree": false,
       "glutenFree": false
     },
     "instructions": [
-      "Heat oven to 190C/fan 170C/gas 5. Butter two 20cm sandwich tins and line with non-stick baking paper.",
-      "In a large bowl, beat 200g caster sugar, 200g softened butter, 4 beaten eggs, 200g self-raising flour, 1 tsp baking powder and 2 tbsp milk together until you have a smooth, soft batter.",
-      "Divide the mixture between the tins, smooth the surface with a spatula or the back of a spoon.",
-      "Bake for about 20 mins until golden and the cake springs back when pressed.",
-      "Turn onto a cooling rack and leave to cool completely.",
-      "To make the filling, beat the 100g softened butter until smooth and creamy, then gradually beat in 140g sifted icing sugar and a drop of vanilla extract (if you’re using it).",
+      "Heat oven to 190C. Butter two 20cm sandwich tins and line with non-stick baking paper.",
+      "Beat 200g caster sugar, 200g softened butter, 4 beaten eggs, 200g self-raising flour, 1 tsp baking powder and 2 tbsp milk together.",
+      "Divide the mixture between the tins, smooth the surface with a spatula.",
+      "Bake for 20 mins until golden.",
+      "Turn onto cooling rack and leave to cool.",
+      "For filling, beat 100g softened butter until smooth and creamy, the beat in 140g sifted icing sugar.",
       "Spread the buttercream over the bottom of one of the sponges. Top it with 170g strawberry jam and sandwich the second sponge on top.",
-      "Dust with a little icing sugar before serving. Keep in an airtight container and eat within 2 days."
+      "Sprinkle with icing sugar."
+    ]
+  },
+  {
+    "title": "Margherita Pizza",
+    "type": "food",
+    "description": "Even a novice can master the art of pizza.",
+    "photos": ["margherita-pizza.jpg"],
+    "stats": {
+      "times": {
+        "prep": 25,
+        "cook": 10
+      },
+      "difficulty": 0
+    },
+    "serves": 4,
+    "ingredients": [
+      {
+        "name": "bread flour",
+        "quantity": "300g"
+      },
+      {
+        "name": "instant yeast",
+        "quantity": "1 tsp"
+      },
+      {
+        "name": "olive oil",
+        "quantity": "1 tbsp"
+      },
+      {
+        "name": "passata",
+        "quantity": "100 ml"
+      },
+      {
+        "name": "ball mozzarella, sliced",
+        "quantity": "125g"
+      },
+      {
+        "name": "grated parmesan",
+        "quantity": "handful"
+      },
+      {
+        "name": "cherry tomatoes",
+        "quantity": "handful"
+      },
+      {
+        "name": "basil leaves",
+        "quantity": "handful"
+      }
+    ],
+    "nutrition": {
+      "kcal": 435,
+      "fat": 14,
+      "saturates": 5,
+      "carbs": 60,
+      "sugars": 4,
+      "fibre": 2,
+      "protein": 22,
+      "salt": 2.2
+    },
+    "allergens": [],
+    "dietaryInfo": {
+      "vegetarian": true,
+      "vegan": false,
+      "lactoseFree": false,
+      "glutenFree": false
+    },
+    "instructions": [
+      "For base: Put flour into a large bowl, then stir in yeast and salt. Make a well, pour in 200ml warm water and the olive oil and bring together with a wooden spoon until you have a soft, fairly wet dough. Turn onto a lightly floured surface and knead for 5 mins until smooth. Cover with a tea towel and set aside.",
+      "For sauce: Mix the passata, basil and crushed garlic together, then season to taste. Leave to stand at room temperature.",
+      "Roll out the dough: split dough into two balls. Roll out the dough into large rounds, about 25cm across, using a rolling pin. The dough needs to be very thin as it will rise in the oven. Lift the rounds onto two floured baking sheets.",
+      "Top and bake: heat the oven to 240C. Put another baking sheet in oven on the top shelf. Smooth sauce over bases with the back of a spoon. Scatter with cheese and tomatoes, drizzle with olive oil and season. Put one pizza, still on its baking sheet, on top of the preheated sheet or tray. Bake for 8-10 mins until crisp."
+    ]
+  },
+  {
+    "title": "Chocolate Cake",
+    "type": "food",
+    "description": "You'd never know that this cake is lactose free, gluten free and vegan!",
+    "photos": ["cake.jpg"],
+    "stats": {
+      "times": {
+        "prep": 30,
+        "cook": 25
+      },
+      "difficulty": 0
+    },
+    "serves": 14,
+    "ingredients": [
+      {
+        "name": "ripe ripe avocado",
+        "quantity": "1"
+      },
+      {
+        "name": "light muscovado sugar",
+        "quantity": "300g"
+      },
+      {
+        "name": "gluten-free plain flour",
+        "quantity": "350g"
+      },
+      {
+        "name": "cocoa powder",
+        "quantity": "1 tsp"
+      },
+      {
+        "name": "bicarbonate of soda",
+        "quantity": "1 tsp"
+      },
+      {
+        "name": "gluten-free baking powder",
+        "quantity": "2 tsp"
+      },
+      {
+        "name": "soya milk",
+        "quantity": "400ml"
+      },
+      {
+        "name": "vegetable oil",
+        "quantity": "150ml"
+      },
+      {
+        "name": "dairy-free chocolate",
+        "quantity": "200g"
+      },
+      {
+        "name": "icing sugar",
+        "quantity": "200g"
+      },
+      {
+        "name": "vegetable oil",
+        "quantity": "150ml"
+      }
+    ],
+    "nutrition": {
+      "kcal": 447,
+      "fat": 20,
+      "saturates": 3,
+      "carbs": 60,
+      "sugars": 32,
+      "fibre": 5,
+      "protein": 6,
+      "salt": 0.7
+    },
+    "allergens": [],
+    "dietaryInfo": {
+      "vegetarian": true,
+      "vegan": true,
+      "lactoseFree": true,
+      "glutenFree": true
+    },
+    "instructions": [
+      "Heat oven to 160C. Grease two 20cm sandwich tins with a little dairy-free sunflower spread, then line the bases with baking parchment.",
+      "Put 1 large avocado and 300g light muscovado sugar in a food processor and whizz until smooth.",
+      "Add 350g gluten-free plain flour, 50g cocoa powder, 1 tsp bicarbonate of soda, 2 tsp gluten-free baking powder, 400ml unsweetened soya milk, 150ml vegetable oil and 2 tsp vanilla extract to the bowl with ½ tsp fine salt and process again to a velvety, liquid batter.",
+      "Divide between the tins and bake for 25 mins or until a skewer inserted into the middle of the cakes comes out clean.",
+      "Cool in the tins for 5 mins, then turn the cakes onto a rack to cool completely.",
+      "Prepare frosting. Beat together 85g ripe avocado flesh and 85g dairy-free sunflower spread with electric beaters until creamy and smooth. Pass through a sieve and set aside.",
+      "Melt 200g dairy-free chocolate over a bowl of water, then let cool for a few mins.",
+      "Sift 25g cocoa powder into a large bowl. Bring 125ml unsweetened soya milk to a simmer, then gradually beat into the cocoa until smooth. Cool for a few mins.",
+      "Tip in the avocado mix, 200g sifted icing sugar, melted chocolate and 1 tsp vanilla, and keep mixing to make a shiny, thick frosting. Use this to sandwich and top the cake.",
+      "Cover with sprinkles or your own decoration, then leave to set for 10 mins before slicing. Can be made 2 days ahead."
+    ]
+  },
+  {
+    "title": "Chicken Burger",
+    "type": "food",
+    "description": "Chicken burger with Jamaican-inspired spicy seasoning. Served in a bread roll with tomato, lettuce and sauce",
+    "photos": ["hamburger.jpg"],
+    "stats": {
+      "times": {
+        "prep": 10,
+        "cook": 10
+      },
+      "difficulty": 1
+    },
+    "serves": 2,
+    "ingredients": [
+      {
+        "name": "chicken breast",
+        "quantity": "2"
+      },
+      {
+        "name": "olive oil",
+        "quantity": "1 tbsp"
+      },
+      {
+        "name": "bread roll",
+        "quantity": "2"
+      },
+      {
+        "name": "tomato",
+        "quantity": "1"
+      },
+      {
+        "name": "lettuce",
+        "quantity": "1"
+      }
+    ],
+    "nutrition": {
+      "kcal": 420,
+      "fat": 15,
+      "saturates": 5,
+      "carbs": 55,
+      "sugars": 14,
+      "fibre": 4,
+      "protein": 37,
+      "salt": 3
+    },
+    "allergens": [],
+    "dietaryInfo": {
+      "vegetarian": false,
+      "vegan": false,
+      "lactoseFree": false,
+      "glutenFree": false
+    },
+    "instructions": [
+      "Put the chicken breasts in between pieces of cling film and bash with a rolling pin to flatten. Mix together the thyme, oil and half the lime juice in a bowl. Add the chicken and leave to marinate for 5 mins.",
+      "Heat a griddle pan until hot and cook the chicken for 4-5 mins each side or until cooked through. Remove from the heat. Toast the cut sides of the buns for 1-2 mins.",
+      "Put the chicken on the buns and top with the tomato and a handful of lettuce. Squeeze over the rest of the lime and top with ketchup."
+    ]
+  },
+  {
+    "title": "Frozen Berry Yogurt",
+    "type": "food",
+    "description": "3 ingredients + 2 minutes is all you need to make this low-fat, low-calorie frozen yogurt!",
+    "photos": ["yogurt.jpg"],
+    "stats": {
+      "times": {
+        "prep": 2,
+        "cook": 0
+      },
+      "difficulty": 0
+    },
+    "serves": 2,
+    "ingredients": [
+      {
+        "name": "mixed berries",
+        "quantity": "250g"
+      },
+      {
+        "name": "greek yogurt",
+        "quantity": "250g"
+      },
+      {
+        "name": "honey",
+        "quantity": "1 tbsp"
+      }
+    ],
+    "nutrition": {
+      "kcal": 61,
+      "fat": 0,
+      "saturates": 0,
+      "carbs": 12,
+      "sugars": 9,
+      "fibre": 1,
+      "protein": 14,
+      "salt": 0
+    },
+    "allergens": [],
+    "dietaryInfo": {
+      "vegetarian": true,
+      "vegan": false,
+      "lactoseFree": false,
+      "glutenFree": false
+    },
+    "instructions": [
+      "Blend berries, yogurt and honey in a food processor for 20 seconds, until it comes together to a smooth ice-cream texture. Scoop into bowls and serve."
+    ]
+  },
+  {
+    "title": "Summer Mocktail",
+    "type": "drink",
+    "description": "Get into that summer vibe with this fruity mocktail full of red berries, lemonade and mint. Cool and refreshing.",
+    "photos": ["mocktail.jpg"],
+    "stats": {
+      "times": {
+        "prep": 15,
+        "cook": 0
+      },
+      "difficulty": 0
+    },
+    "alcoholic": false,
+    "ingredients": [
+      {
+        "name": "mint",
+        "quantity": "1"
+      },
+      {
+        "name": "frozen red berries",
+        "quantity": "some"
+      },
+      {
+        "name": "lemonade",
+        "quantity": "120ml"
+      },
+      {
+        "name": "ice"
+      }
+    ],
+    "nutrition": {
+      "kcal": 30,
+      "fat": 0,
+      "saturates": 0,
+      "carbs": 8,
+      "sugars": 9,
+      "fibre": 0,
+      "protein": 0,
+      "salt": 0
+    },
+    "allergens": [],
+    "dietaryInfo": {
+      "vegetarian": true,
+      "vegan": true,
+      "lactoseFree": true,
+      "glutenFree": true
+    },
+    "instructions": [
+      "Chop the mint sprig into small pieces. Bring 200ml water to the boil in a small pan and then add the mint. Turn off the heat and leave for 2 mins. Add a small handful of frozen berries, let them defrost for a minute, then crush them lightly with the back of a spoon. Strain the mixture. This will keep in the fridge for up to 24 hours and will be enough to make four drinks.",
+      "Pour 40ml of your strained mixture into a tall glass. Add a handful of ice and top up with 120ml lemonade."
+    ]
+  },
+  {
+    "title": "Mojito",
+    "type": "drink",
+    "description": "Classic cocktail for a party with fresh mint, white rum, sugar, zesty lime.",
+    "photos": ["mojito.jpg"],
+    "stats": {
+      "times": {
+        "prep": 5,
+        "cook": 0
+      },
+      "difficulty": 0
+    },
+    "alcoholic": true,
+    "ingredients": [
+      {
+        "name": "lime",
+        "quantity": "1"
+      },
+      {
+        "name": "granulated sugar",
+        "quantity": "1 tsp"
+      },
+      {
+        "name": "mint leaves",
+        "quantity": "handful"
+      },
+      {
+        "name": "white rum",
+        "quantity": "60ml"
+      }
+    ],
+    "nutrition": {
+      "kcal": 160,
+      "fat": 0,
+      "saturates": 0,
+      "carbs": 6.7,
+      "sugars": 4.5,
+      "fibre": 0,
+      "protein": 0,
+      "salt": 0
+    },
+    "allergens": [],
+    "dietaryInfo": {
+      "vegetarian": false,
+      "vegan": false,
+      "lactoseFree": false,
+      "glutenFree": false
+    },
+    "instructions": [
+      "Muddle the lime juice, sugar and mint leaves in a small jug, crushing the mint as you go. Pour into a tall glass and add a handful of ice.",
+      "Pour over the rum while stirring. Top up with soda water, garnish with mint and serve."
+    ]
+  },
+  {
+    "title": "Banana Milkshake",
+    "type": "drink",
+    "description": "An easy banana shake you can make in minutes.",
+    "photos": ["banana.jpg"],
+    "stats": {
+      "times": {
+        "prep": 5,
+        "cook": 0
+      },
+      "difficulty": 0
+    },
+    "alcoholic": false,
+    "ingredients": [
+      {
+        "name": "semi-skimmed milk",
+        "quantity": "250ml"
+      },
+      {
+        "name": "vanilla ice cream",
+        "quantity": "1 scoop"
+      },
+      {
+        "name": "chopped bananas",
+        "quantity": "2"
+      },
+      {
+        "name": "whipped cream",
+        "quantity": "50ml"
+      },
+      {
+        "name": "cherry",
+        "quantity": "1"
+      }
+    ],
+    "nutrition": {
+      "kcal": 800,
+      "fat": 41,
+      "saturates": 17,
+      "carbs": 88,
+      "sugars": 56,
+      "fibre": 4,
+      "protein": 20,
+      "salt": 0.2
+    },
+    "allergens": [],
+    "dietaryInfo": {
+      "vegetarian": true,
+      "vegan": false,
+      "lactoseFree": false,
+      "glutenFree": false
+    },
+    "instructions": [
+      "Put milk, vanilla ice cream and banana into a blender. Mix everything up until smooth then pour into a tall glass.",
+      "Top with a big spoonful of whipped cream and decorate with a pinch of cinnamon, some banana chips and a cherry."
     ]
   }
 ]

@@ -10,10 +10,16 @@
 #include <QLabel>
 #include <QPushButton>
 
+// union
+union Difficulty {
+    int numericalVal;
+    char difficultyScale;
+};
+
 struct RecipeStats {
     int prepTime;
     int cookTime;
-    int difficulty;
+    Difficulty difficulty;
 };
 
 struct Nutrition {
@@ -52,8 +58,6 @@ public:
     RecipeStats stats;
     QList<Ingredient> ingredients;
     Nutrition nutrition;
-    bool vegan;
-    bool vegetarian;
     QList<QString> instructions;
     QPushButton* viewBtn;
 

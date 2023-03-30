@@ -35,7 +35,7 @@ QVBoxLayout* DrinkRecipe::createCard() {
 
 
     // title
-    QLabel* titleLabel = Recipe::getCardTitleComponent();
+    QLabel* titleLabel = getCardTitleComponent();
     recipeContainer->addWidget(titleLabel);
 
     QHBoxLayout* labels = RecipeUtils::getLabelsComponent(this);

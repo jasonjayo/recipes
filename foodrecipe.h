@@ -2,9 +2,10 @@
 #define FOODRECIPE_H
 
 #include "recipe.h"
+#include "stringable.h"
 #include <QVBoxLayout>
 
-class FoodRecipe : public Recipe
+class FoodRecipe : public Recipe, protected Stringable
 {
 public:
     FoodRecipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,

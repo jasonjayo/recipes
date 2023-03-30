@@ -2,8 +2,9 @@
 #define DRINKRECIPE_H
 
 #include "recipe.h"
+#include "stringable.h"
 
-class DrinkRecipe : public Recipe
+class DrinkRecipe : public Recipe, protected Stringable
 {
 public:
     DrinkRecipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,

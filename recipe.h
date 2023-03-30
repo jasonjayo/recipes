@@ -2,7 +2,6 @@
 #define RECIPE_H
 
 #include "ingredient.h"
-#include "stringable.h"
 
 #include <QString>
 #include <QList>
@@ -36,7 +35,7 @@ struct DietaryInfo {
     unsigned lactoseFree: 1;
 };
 
-class Recipe : protected Stringable
+class Recipe
 {
 public:
     Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,

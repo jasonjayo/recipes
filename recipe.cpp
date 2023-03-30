@@ -3,19 +3,16 @@
 
 #include <QString>
 #include <QList>
-#include <iostream>
 #include <QLabel>
 #include <QPushButton>
 #include <QObject>
 
-#include <sstream>
-#include <iostream>
-
-Recipe::Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients, Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, DietaryInfo dietaryInfo)
-    : title(title), description(description), photos(photos), dietaryInfo(dietaryInfo), stats(stats), ingredients(ingredients), nutrition(nutrition), vegan(vegan), vegetarian(vegetarian), instructions(instructions)
+Recipe::Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients, Nutrition nutrition, QList<QString> instructions, DietaryInfo dietaryInfo)
+    : title(title), description(description), photos(photos), dietaryInfo(dietaryInfo), stats(stats), ingredients(ingredients), nutrition(nutrition), instructions(instructions)
 {
 }
 
+// deep copy constructor
 Recipe::Recipe(const Recipe& otherRecipe) {
     qDebug() << "copy";
     title = QString(otherRecipe.title);
@@ -75,40 +72,8 @@ QPushButton* Recipe::getCardButtonComponent() {
     QPushButton* viewBtn = new QPushButton;
     viewBtn->setText("View recipe");
     viewBtn->setStyleSheet("QPushButton { background: #cfcfcf; border: none; padding: 8px 0; font-weight:bold; text-transform:uppercase; font-size: 12px; }QPushButton:hover {background: #fff}");
-//    QObject::connect(viewBtn, &QPushButton::clicked, , [=]() {
-////        ui->stackedWidget->setCurrentIndex(1);
-//        qDebug() << "viewBtn clicked";
-//    });
+
     return viewBtn;
-}
-
-//QHBoxLayout* Recipe::getLabelsComponent() {
-//    QHBoxLayout* box = new QHBoxLayout();
-//    if (dietaryInfo.vegetarian) {
-//        QLabel* vegetarian = new QLabel("Vegetarian");
-//        vegetarian->setStyleSheet("background: #4caf50; padding: 2px 5px;");
-//        box->addWidget(vegetarian);
-//    }
-//    if (dietaryInfo.vegan) {
-//        QLabel* vegetarian = new QLabel("Vegan");
-//        vegetarian->setStyleSheet("background: #8bc34a; padding: 2px 5px;");
-//        box->addWidget(vegetarian);
-//    }
-//    if (dietaryInfo.lactoseFree) {
-//        QLabel* vegetarian = new QLabel("Lactose Free");
-//        vegetarian->setStyleSheet("background: #cddc39; padding: 2px 5px;");
-//        box->addWidget(vegetarian);
-//    }
-//    if (dietaryInfo.glutenFree) {
-//        QLabel* vegetarian = new QLabel("Gluten Free");
-//        vegetarian->setStyleSheet("background: #009688; padding: 2px 5px;");
-//        box->addWidget(vegetarian);
-//    }
-//    return box;
-//}
-
-double Recipe::operator+(Recipe const& r) {
-    return nutrition.kcal + r.nutrition.kcal;
 }
 
 std::string Recipe::to_long_string() {
@@ -131,14 +96,18 @@ std::string Recipe::to_long_string() {
     return s;
 }
 
+// overloaded operator
 std::ostream &operator<<(std::ostream&o, Recipe &r) {
     o << r.to_long_string();
     return o;
 }
 
+// overloaded operator
 bool operator< (const Recipe &r1, const Recipe &r2) {
     return r1.nutrition.kcal < r2.nutrition.kcal;
 }
+
+// overloaded operator
 bool operator> (const Recipe &r1, const Recipe &r2) {
     return r1.nutrition.kcal > r2.nutrition.kcal;
 }

@@ -4,8 +4,10 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+// namespace
 namespace RecipeUtils {
 
+// template function
 template <class T> QHBoxLayout* getLabelsComponent(T a) {
     QHBoxLayout* box = new QHBoxLayout();
     if (a->dietaryInfo.vegetarian) {
@@ -28,7 +30,7 @@ template <class T> QHBoxLayout* getLabelsComponent(T a) {
     }
     if (a->dietaryInfo.glutenFree) {
         QLabel* glutenFree = new QLabel("Gluten Free");
-        glutenFree->setStyleSheet("background: #009688; padding: 2px 5px; border-radius: 6px; text-align: center;");
+        glutenFree->setStyleSheet("background: #009688; padding: 2px 5px; border-radius: 6px;");
         glutenFree->setAlignment(Qt::AlignCenter);
         box->addWidget(glutenFree);
     }

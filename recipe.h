@@ -35,39 +35,30 @@ struct DietaryInfo {
     unsigned lactoseFree: 1;
 };
 
+// abstract class
+// virtual, pure virtual functions
 class Recipe
 {
 public:
     Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
-           Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, DietaryInfo dietaryInfo);
+           Nutrition nutrition, QList<QString> instructions, DietaryInfo dietaryInfo);
 
 
-
-
-    virtual QVBoxLayout* createCard() = 0;
-//    virtual QString getDescription() = 0;
 
     QString title;
     QString description;
     QList<QString> photos;
-
     DietaryInfo dietaryInfo;
-
-
     RecipeStats stats;
-
     QList<Ingredient> ingredients;
-
-
-
     Nutrition nutrition;
-
     bool vegan;
     bool vegetarian;
     QList<QString> instructions;
+    QPushButton* viewBtn;
 
     Recipe(const Recipe &otherRecipe);
-
+    virtual QVBoxLayout* createCard() = 0;
     friend std::ostream &operator<<(std::ostream &o, Recipe &r);
     friend bool operator< (const Recipe &r1, const Recipe &r2);
     friend bool operator> (const Recipe &r1, const Recipe &r2);
@@ -78,7 +69,6 @@ protected:
     virtual QGridLayout *getCardStatsGridComponent();
     virtual QLabel *getCardDescriptionComponent();
     virtual QPushButton *getCardButtonComponent();
-//    virtual QHBoxLayout *getLabelsComponent();
 };
 
 #endif // RECIPE_H

@@ -1,32 +1,31 @@
 #include "mainwindow.h"
-#include "qjsondocument.h"
 #include "ui_mainwindow.h"
 #include "missingfileexception.h"
 #include "foodrecipe.h"
 #include "drinkrecipe.h"
 #include "utils.h"
+#include <recipe.h>
+#include <typeinfo>
 
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QJsonDocument>
 #include <QLabel>
 #include <QTextEdit>
 #include <QGuiApplication>
 #include <QScreen>
 #include <QString>
-#include <recipe.h>
 #include <QDir>
 #include <QLayout>
-#include <iostream>
 #include <QGroupBox>
 #include <QCheckBox>
 #include <QRadioButton>
 #include <QContextMenuEvent>
 #include <QAction>
 #include <QSlider>
-#include <cstdlib>
 
 #define NUM_CARDS_PER_LINE 4
 #define GRID_TOP_OFFSET 1
@@ -52,19 +51,15 @@ bool showVegetarianOnly = false;
 
 int maxTime = 100;
 
+// vars for recipe details page
 QGridLayout* rd_grid;
 QLabel* rd_title;
 QLabel* rd_description;
-
 QLabel* rd_image;
-
 QLabel* rd_stats;
-
 QLabel* rd_ingredients;
 QLabel* rd_nutrition;
-
 QHBoxLayout* rd_diateryInfo;
-
 QLabel* rd_instructions;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -73,43 +68,33 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // QMenu right click context menu
     resetAct = new QAction("Reset list", this);
     resetAct->setStatusTip("Reset the list filters to their initial state");
-
-
-    rd_grid = new QGridLayout();
-    rd_title = new QLabel();
-    rd_description = new QLabel();
-
-    rd_image = new QLabel();
-
-    rd_stats = new QLabel();
-
-    rd_ingredients = new QLabel();
-    rd_nutrition = new QLabel();
-
-    rd_diateryInfo = new QHBoxLayout();
-
-    rd_instructions = new QLabel();
 
     // arrays and pointers
     srand(time(0));
     int ranNum = rand();
-    std::string fact = *(foodFacts + (ranNum % foodFactsLength));
+    std::string fact = *(foodFacts + (ranNum % foodFactsLength)); // pointer arithmetic
 
+
+
+    /*
+     * BEGIN HOME PAGE UI SET UP
+     */
+
+    // advanced preprocessor directives & build-in macros
 #ifdef GRID_TOP_OFFSET
-
-    QLabel* topRow = new QLabel("Compiled " + QString(__DATE__) + " " + QString(__TIME__) + "<br><br>" +
-                                "<b>Did you know?</b> " + QString::fromStdString(fact));
-    topRow->setTextFormat(Qt::RichText);
+    QLabel* topRow = new QLabel("<h1 style='text-transform:uppercase'>Recipe Discovery App</h1><i>Jason Gill (21304092)</i><br><br>Compiled " + QString(__DATE__) + " " + QString(__TIME__) + " C++ " + QString::number(__cplusplus) + "<br><br>" + "<b>Did you know?</b> " + QString::fromStdString(fact));
+    topRow->setTextFormat(Qt::RichText); // allows html formatting
     topRow->setWordWrap(true);
     ui->gridLayout->addWidget(topRow, 0, 0);
-    //resize(QGuiApplication::primaryScreen()->availableGeometry().size() * 1);
-    //qDebug() << QGuiApplication::primaryScreen()->availableGeometry().size();
+#else
+    QLabel* topRow = new QLabel("Something is wrong!");
+    ui->gridLayout->addWidget(topRow, 0, 0);
 #endif
-    //    QFile file(QDir::homePath() + "/something.json");
-    // C:/Users/jason
 
+    // set up filters box
     QGroupBox* filtersBox = new QGroupBox("Filters");
     QCheckBox* veganFilterBox = new QCheckBox("Vegan");
     QCheckBox* vegetarianFilterBox = new QCheckBox("Vegetarian");
@@ -121,6 +106,7 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel* timeSliderValue = new QLabel(QString::number(maxTime) + " mins.");
     QHBoxLayout* timeSliderContainer = new QHBoxLayout();
     QSlider* timeSlider = new QSlider(Qt::Horizontal);
+
     timeSlider->setMaximumWidth(150);
     timeSliderContainer->addWidget(timeSliderLabel);
     timeSliderContainer->addWidget(timeSlider, Qt::AlignLeft);
@@ -131,6 +117,7 @@ MainWindow::MainWindow(QWidget *parent)
         timeSliderValue->setText(QString::number(pos) + " mins.");
         displayCards();
     });
+
     filtersVBox->addWidget(veganFilterBox);
     filtersVBox->addWidget(vegetarianFilterBox);
     filtersVBox->addWidget(showFoodOnlyFilterBtn);
@@ -138,10 +125,6 @@ MainWindow::MainWindow(QWidget *parent)
     filtersVBox->addWidget(showAllFilterBtn);
     filtersVBox->addLayout(timeSliderContainer);
     filtersBox->setLayout(filtersVBox);
-
-    //    QPushButton* removeAllCardsBtn = new QPushButton("Remove all cards");
-    //    filtersVBox->addWidget(removeAllCardsBtn);
-    //    connect(removeAllCardsBtn, &QPushButton::clicked, this, &MainWindow::removeAllCards);
 
     showAllFilterBtn->setChecked(true);
     timeSlider->setTickInterval(1);
@@ -158,11 +141,11 @@ MainWindow::MainWindow(QWidget *parent)
     veganFilterBox->setChecked(showVeganOnly);
     vegetarianFilterBox->setChecked(showVegetarianOnly);
 
+    // using anonymous functions / lambda expressions for convenience
     connect(veganFilterBox, &QCheckBox::stateChanged, this, [=]() {
         showVeganOnly = veganFilterBox->isChecked();
         displayCards();
     });
-
     connect(vegetarianFilterBox, &QCheckBox::stateChanged, this, [=]() {
         showVegetarianOnly = vegetarianFilterBox->isChecked();
         displayCards();
@@ -184,8 +167,7 @@ MainWindow::MainWindow(QWidget *parent)
         showDrinksOnly = false;
         displayCards();
     });
-
-
+    // for right click context menu item
     connect(resetAct, &QAction::triggered, this, [=]() {
         showFoodOnly = showDrinksOnly = false;
         showVeganOnly = showVegetarianOnly = false;
@@ -200,21 +182,33 @@ MainWindow::MainWindow(QWidget *parent)
         displayCards();
     });
 
-    // TODO: remove absolute file name
-    QFile recipesFile("C:/Users/jason/Desktop/College/Modules/CS4076/Project/recipes/recipes.json");
+    QPushButton* backBtn = new QPushButton("< Back");
+//    backBtn->setMaximumWidth(100);
+    connect(backBtn, &QPushButton::clicked, this, [=]() {
+        ui->stackedWidget->setCurrentIndex(0);
+    });
+    ui->gridLayout_p2->addWidget(backBtn, 0, 0);
+
+    /*
+     * END HOME PAGE UI SET UP
+     */
+
+
+
+    /*
+     * START JSON READING
+     */
+
+    // file brought in as a resource
+    QFile recipesFile(":/recipes/recipes.json");
     if (!recipesFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        // throw the custom exception if file missing
         throw new MissingFileException("recipes.json");
     }
-    QString data = recipesFile.readAll();
 
+    QString data = recipesFile.readAll();
     QJsonDocument json = QJsonDocument::fromJson(data.toUtf8());
     QJsonArray recipesJsonArr = json.array();
-
-    QTextFormat* titleFormat = new QTextFormat();
-    titleFormat->setProperty(QTextFormat::FontPixelSize, 12);
-
-    //ui->gridLayout->setColumnMinimumWidth(0, 50);
-
 
     // for each recipe
     for (const QJsonValue &recipeJsonObj : recipesJsonArr) {
@@ -223,7 +217,6 @@ MainWindow::MainWindow(QWidget *parent)
         QString title = recipeJsonObj["title"].toString();
         QString recipeType = recipeJsonObj["type"].toString();
         QString description = recipeJsonObj["description"].toString();
-
 
         QJsonArray photosJsonArr = recipeJsonObj["photos"].toArray();
         QList<QString> photos;
@@ -266,17 +259,12 @@ MainWindow::MainWindow(QWidget *parent)
             allergens.push_back(allergenVal.toString());
         }
 
-        bool vegan = recipeJsonObj["vegan"].toBool();
-        bool vegetarian = recipeJsonObj["vegetarian"].toBool();
-
         DietaryInfo diateryInfo;
         QJsonObject diateryInfoJsonObj = recipeJsonObj["dietaryInfo"].toObject();
         diateryInfo.vegan = diateryInfoJsonObj["vegan"].toBool();
         diateryInfo.vegetarian = diateryInfoJsonObj["vegetarian"].toBool();
         diateryInfo.glutenFree = diateryInfoJsonObj["glutenFree"].toBool();
         diateryInfo.lactoseFree = diateryInfoJsonObj["lactoseFree"].toBool();
-
-        qDebug() << diateryInfo.vegan;
 
         QList<QString> instructions;
         QJsonArray instructionsJsonArr = recipeJsonObj["instructions"].toArray();
@@ -286,11 +274,11 @@ MainWindow::MainWindow(QWidget *parent)
 
         //        Recipe* r;
         if (recipeType == "food") {
-            FoodRecipe* recipeObj = new FoodRecipe(title, description, photos, recipeStats, ingredients, nutrition, vegan, vegetarian, instructions, diateryInfo, recipeJsonObj["serves"].toInt());
+            FoodRecipe* recipeObj = new FoodRecipe(title, description, photos, recipeStats, ingredients, nutrition, instructions, diateryInfo, recipeJsonObj["serves"].toInt());
             foodRecipes.push_back(recipeObj);
             //            r = recipeObj;
         } else {
-            DrinkRecipe* recipeObj = new DrinkRecipe(title, description, photos, recipeStats, ingredients, nutrition, vegan, vegetarian, instructions, diateryInfo, false);
+            DrinkRecipe* recipeObj = new DrinkRecipe(title, description, photos, recipeStats, ingredients, nutrition, instructions, diateryInfo, false);
             drinkRecipes.push_back(recipeObj);
             //            r = recipeObj;
         }
@@ -298,43 +286,57 @@ MainWindow::MainWindow(QWidget *parent)
         //        qDebug() << static_cast<FoodRecipe*>(recipeObj)->getServings();
         //        recipeContainer
 
-        //QVBoxLayout* recipeContainer = r->createCard();
-        //ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
-        //ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
-        //        i++;
-
-
     }
 
-    QPushButton* backBtn = new QPushButton("< Back");
-    backBtn->setMaximumWidth(100);
-    connect(backBtn, &QPushButton::clicked, this, [=]() {
-        ui->stackedWidget->setCurrentIndex(0);
-    });
-    ui->gridLayout_p2->addWidget(backBtn);
+    recipesFile.close();
 
-    // set up recipe details page
+    /*
+     * END JSON READING
+     */
+
+
+
+    /*
+     *  BEGIN RECIPE DETAILS PAGE UI SET UP
+     */
+
+    rd_grid = new QGridLayout();
+    rd_title = new QLabel();
+    rd_description = new QLabel();
+//    rd_description->setWordWrap(true);
+    rd_image = new QLabel();
+    rd_stats = new QLabel();
+    rd_ingredients = new QLabel();
+    rd_nutrition = new QLabel();
+    rd_diateryInfo = new QHBoxLayout();
+    rd_instructions = new QLabel();
+
     rd_grid->addWidget(rd_title, 0, 0);
-    rd_grid->addWidget(rd_description, 1, 0, 0, 3);
+    rd_grid->addWidget(rd_description, 1, 0, 1, 3);
     rd_grid->addWidget(rd_image, 2, 0, 1, 2);
     rd_grid->addLayout(rd_diateryInfo, 3, 0, 1, 3);
     rd_grid->addWidget(rd_stats, 4, 0);
-    QString centralStylesheet = "border: 4px solid #fff;padding: 10px;border-radius:6px;";
-    rd_stats->setStyleSheet(centralStylesheet);
-    rd_ingredients->setStyleSheet(centralStylesheet);
-    rd_nutrition->setStyleSheet(centralStylesheet);
-
     rd_grid->addWidget(rd_ingredients, 4, 1);
     rd_grid->addWidget(rd_nutrition, 4, 2);
     rd_grid->addWidget(rd_instructions, 5, 0, 1, 3);
+
+    QString centralStylesheet = "border: 8px solid #fff;padding: 10px;border-radius:12px;";
+    rd_stats->setStyleSheet(centralStylesheet);
+    rd_ingredients->setStyleSheet(centralStylesheet);
+    rd_nutrition->setStyleSheet(centralStylesheet);
     rd_stats->setAlignment(Qt::AlignTop);
     rd_nutrition->setAlignment(Qt::AlignTop);
     rd_ingredients->setAlignment(Qt::AlignTop);
 
-    ui->gridLayout_p2->addLayout(rd_grid, 1, 0);
+    ui->gridLayout_p2->addLayout(rd_grid, 1, 0, 1, 3);
+
+    /*
+     *  END RECIPE DETAILS PAGE UI SET UP
+     */
 
 
 
+    // now ready to display recipes on screen
     displayCards();
 
     // working on copy constructor
@@ -342,181 +344,118 @@ MainWindow::MainWindow(QWidget *parent)
     //    DrinkRecipe copy = *drinkRecipes.at(0);
     //    qDebug() << &copy.instructions;
 
-    //    std::ostringstream buffer;
-    //    buffer << drinkRecipes.at(0);
-    //    QString str = QString::fromStdString(buffer.str());
-    //    qDebug() << "Output: " << str;
 
-    //qDebug() << *drinkRecipes.at(0) + *drinkRecipes.at(1);
-
-//    if (*drinkRecipes.at(0) < *drinkRecipes.at(1)) {
-//        qDebug() << "0 is less than 1!";
-//    }
-
-//    std::cout << "blah: " << drinkRecipes.at(0);
-
-//    DrinkRecipe dr = *drinkRecipes.at(0);
-//    std::cout << dr;
-
-    recipesFile.close();
-
+    // ensure page 0 (home) of stacked widget is displayed
     ui->stackedWidget->setCurrentIndex(0);
     setCentralWidget(ui->scrollArea);
 
 }
 
 void MainWindow::displayCards() {
-    //qDebug() << "showing vegan only? " << showVeganOnly;
-    removeAllCards();
 
-    //    qDebug() << ui->gridLayout->count();
-    //    for (int i = 2; i < ui->gridLayout->count(); i++) {
-    //        QLayoutItem* l = ui->gridLayout->itemAt(i)->layout();
-    //        qDebug() << "removing " << l;
-    //        ui->gridLayout->removeItem(l);
-    //    }
+    // clear all cards first and then start fresh
+    removeWidgets(ui->gridLayout, 2);
 
-    qDebug() << "showDrinksOnly " << showDrinksOnly;
+    QList<Recipe*> recipes;
+    for (int i = 0; i < foodRecipes.count(); i++) {
+        recipes.append(foodRecipes.at(i));
+    }
+    for (int i = 0; i < drinkRecipes.count(); i++) {
+        recipes.append(drinkRecipes.at(i));
+    }
+
+
+
     int i = 0;
-    if (!showDrinksOnly) {
+    for (int j = 0; j < recipes.count(); j++) {
 
-        //        for (FoodRecipe* &r: foodRecipes) {
-        for (int j = 0; j < foodRecipes.count(); j++) {
-            FoodRecipe* r = foodRecipes.at(j);
-            if (showVeganOnly && !(r->dietaryInfo.vegan)) continue;
-            if (showVegetarianOnly && !(r->dietaryInfo.vegetarian)) continue;
-            if (maxTime < (r->stats.prepTime + r->stats.cookTime)) continue;
+        Recipe* r = recipes.at(j);
 
-            QVBoxLayout* recipeContainer = r->createCard();
+        // enforce filters
+        if (showFoodOnly && !dynamic_cast<FoodRecipe*>(r)) continue;
+        if (showDrinksOnly && !dynamic_cast<DrinkRecipe*>(r)) continue;
+        if (showVeganOnly && !(r->dietaryInfo.vegan)) continue;
+        if (showVegetarianOnly && !(r->dietaryInfo.vegetarian)) continue;
+        if (maxTime < (r->stats.prepTime + r->stats.cookTime)) continue;
 
+        QVBoxLayout* recipeContainer = r->createCard();
 
-            if (j + 1 < foodRecipes.count() && *r < *foodRecipes.at(j+1)) {
-                QLabel* l = new QLabel("Fewer calories (" + QString::number(r->nutrition.kcal) + ") than " + foodRecipes.at(j+1)->title + "(" + QString::number(foodRecipes.at(j+1)->nutrition.kcal) + ")!");
-                recipeContainer->insertWidget(recipeContainer->count() - 2, l);
+        QPushButton* viewBtn = r->viewBtn;
+        connect(viewBtn, &QPushButton::clicked, this, [=]() {
+            ui->stackedWidget->setCurrentIndex(1);
+
+            rd_title->setText(r->title);
+            rd_title->setStyleSheet("font-size: 30px;font-weight:bold;");
+            rd_description->setText(r->description);
+            QPixmap pm(":/images/" + r->photos.at(0));
+            rd_image->setPixmap(pm.scaledToWidth(400));
+            rd_stats->setText("<h1>Stats</h1><ul><li>Prep time: " + QString::number(r->stats.prepTime) + "</li>" +
+                              "<li>Cook time: " + QString::number(r->stats.cookTime) + "</li>" +
+                              "<li>Difficulty: " + QString::number(r->stats.difficulty) + "</li></ul>"
+                              );
+
+            removeWidgets(rd_diateryInfo);
+            rd_diateryInfo->addLayout(RecipeUtils::getLabelsComponent(r));
+
+            QString ingredientsHtml;
+            ingredientsHtml += "<h1>Ingredients</h1><ul>";
+            for (int l = 0; l < r->ingredients.length(); l++) {
+                ingredientsHtml += "<li>" + r->ingredients.at(l).title + "</li>";
             }
-            ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
-            //            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
-            i++;
-        }
-    }
+            ingredientsHtml += "</ul>";
+            rd_ingredients->setText(ingredientsHtml);
 
-    qDebug() << "showDrinksOnly " << showFoodOnly;
-    if (!showFoodOnly) {
-
-        for (int j = 0; j < drinkRecipes.count(); j++) {
-            DrinkRecipe* r = drinkRecipes.at(j);
-            if (showVeganOnly && !(r->dietaryInfo.vegan)) continue;
-            if (showVegetarianOnly && !(r->dietaryInfo.vegetarian)) continue;
-            if (maxTime < (r->stats.prepTime + r->stats.cookTime)) continue;
-
-            QVBoxLayout* recipeContainer = r->createCard();
-
-            QPushButton* viewBtn = r->viewBtn;
-            connect(viewBtn, &QPushButton::clicked, this, [=]() {
-                qDebug() << "viewBtn clicked!";
-                ui->stackedWidget->setCurrentIndex(1);
-
-                rd_title->setText(r->title);
-                rd_title->setStyleSheet("font-size: 30px;font-weight:bold;");
-                rd_description->setText(r->description);
-                QPixmap pm(":/images/" + r->photos.at(0));
-                rd_image->setPixmap(pm.scaledToWidth(400));
-                rd_stats->setText("<h1>Stats</h1><ul><li>Prep time: " + QString::number(r->stats.prepTime) + "</li>" +
-                                  "<li>Cook time: " + QString::number(r->stats.cookTime) + "</li>" +
-                                  "<li>Difficulty: " + QString::number(r->stats.difficulty) + "</li></ul>"
-                                  );
-
-                clearWidgets(rd_diateryInfo);
-                rd_diateryInfo->addLayout(RecipeUtils::getLabelsComponent(r));
-
-                QString ingredientsHtml;
-                ingredientsHtml += "<h1>Ingredients</h1><ul>";
-                for (int l = 0; l < r->ingredients.length(); l++) {
-                    ingredientsHtml += "<li>" + r->ingredients.at(l).title + "</li>";
-                }
-                ingredientsHtml += "</ul>";
-                rd_ingredients->setText(ingredientsHtml);
-
-                QString instructionsHtml;
-                instructionsHtml += "<h1>Instructions</h1><ol>";
-                for (int l = 0; l < r->instructions.length(); l++) {
-                    instructionsHtml += "<li>" + r->instructions.at(l) + "</li>";
-                }
-                instructionsHtml += "</ol>";
-                rd_instructions->setText(instructionsHtml);
-
-                QString nutritionHtml = "<h1>Nutrition</h1><ul>";
-                nutritionHtml += "<li>" + QString::number(r->nutrition.kcal) + " kcal</li>";
-                nutritionHtml += "<li>" + QString::number(r->nutrition.fat) + "g fat</li>";
-                nutritionHtml += "<li>" + QString::number(r->nutrition.saturates) + "g saturates</li>";
-                nutritionHtml += "<li>" + QString::number(r->nutrition.carbs) + "g carbs</li>";
-                nutritionHtml += "<li>" + QString::number(r->nutrition.sugars) + "g sugars</li>";
-                nutritionHtml += "<li>" + QString::number(r->nutrition.fibre) + "g fibre</li>";
-                nutritionHtml += "<li>" + QString::number(r->nutrition.protein) + "g protein</li>";
-                nutritionHtml += "<li>" + QString::number(r->nutrition.salt) + "g salt</li></ul>";
-                rd_nutrition->setText(nutritionHtml);
-
-            });
-
-            if (j + 1 < drinkRecipes.count() && *r < *drinkRecipes.at(j+1)) {
-                QLabel* l = new QLabel("Fewer calories (" + QString::number(r->nutrition.kcal) + ") than " + drinkRecipes.at(j+1)->title + " (" + QString::number(drinkRecipes.at(j+1)->nutrition.kcal) + ")!");
-                recipeContainer->insertWidget(recipeContainer->count() - 2, l);
+            QString instructionsHtml;
+            instructionsHtml += "<h1>Instructions</h1><ol>";
+            for (int l = 0; l < r->instructions.length(); l++) {
+                instructionsHtml += "<li>" + r->instructions.at(l) + "</li>";
             }
-            ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
-            //            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
-            i++;
+            instructionsHtml += "</ol>";
+            rd_instructions->setText(instructionsHtml);
+
+            QString nutritionHtml = "<h1>Nutrition</h1><ul>";
+            nutritionHtml += "<li>" + QString::number(r->nutrition.kcal) + " kcal</li>";
+            nutritionHtml += "<li>" + QString::number(r->nutrition.fat) + "g fat</li>";
+            nutritionHtml += "<li>" + QString::number(r->nutrition.saturates) + "g saturates</li>";
+            nutritionHtml += "<li>" + QString::number(r->nutrition.carbs) + "g carbs</li>";
+            nutritionHtml += "<li>" + QString::number(r->nutrition.sugars) + "g sugars</li>";
+            nutritionHtml += "<li>" + QString::number(r->nutrition.fibre) + "g fibre</li>";
+            nutritionHtml += "<li>" + QString::number(r->nutrition.protein) + "g protein</li>";
+            nutritionHtml += "<li>" + QString::number(r->nutrition.salt) + "g salt</li></ul>";
+            rd_nutrition->setText(nutritionHtml);
+
+        });
+
+        if (j + 1 < drinkRecipes.count() && *r < *drinkRecipes.at(j+1)) {
+            QLabel* l = new QLabel("Fewer calories (" + QString::number(r->nutrition.kcal) + ") than " + drinkRecipes.at(j+1)->title + " (" + QString::number(drinkRecipes.at(j+1)->nutrition.kcal) + ")!");
+            recipeContainer->insertWidget(recipeContainer->count() - 2, l);
         }
+        ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
+        //            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
+        i++;
     }
 }
 
-void MainWindow::removeAllCards() {
-    qDebug() << "grid count: " << ui->gridLayout->count();
-
-    //    QVBoxLayout *child;
-    //    while ((child = static_cast<QVBoxLayout*>(ui->gridLayout->takeAt(2))) != nullptr) {
-    //        qDebug() << "removing";
-    ////        delete child->widget(); // delete the widget
-    ////        delete child;   // delete the layout item=
-    ////        child->deleteLater();
-
-    //    }
-    //    delete ui->gridLayout->itemAt(0);
-    //    ui->gridLayout->update();
-    //    for (int i = 2; i < ui->gridLayout->count(); i++) {
-    //        ui->gridLayout->takeAt(i);
-    //        QLayoutItem* l = ui->gridLayout->itemAt(i)->layout();
-    //        qDebug() << "removing " << l;
-    //       ui->gridLayout->removeItem(l);
-    //      delete l;
-    //       ui->gridLayout->update();
-    //    }
-
-    for (int i = 2; i < ui->gridLayout->count(); i++) {
-        //        QLayout* layout = ui->gridLayout->itemAt(i)->layout();
-        clearWidgets(ui->gridLayout, 2);
-        //        for (int k = 0; k < layout->count(); k++) {
-        //            layout->takeAt(k);
-        //        }
-    }
-    qDebug() << "grid count after: " << ui->gridLayout->count();
-}
-
-void MainWindow::clearWidgets(QLayout * layout, int startIndex) {
+void MainWindow::removeWidgets(QLayout* layout, int startIndex) {
     if (!layout) return;
-    while (auto item = layout->takeAt(startIndex)) {
-        delete item->widget();
-        clearWidgets(item->layout(), 0);
+    // auto so type is determined from thing on RHS
+    while (auto elem = layout->takeAt(startIndex)) {
+        // memory management
+        delete elem->widget();
+        // recursive call
+        removeWidgets(elem->layout(), 0);
     }
 }
 
-void MainWindow::contextMenuEvent(QContextMenuEvent *event) {
+void MainWindow::contextMenuEvent(QContextMenuEvent* e) {
     QMenu menu(this);
     menu.addAction(resetAct);
-    menu.exec(event->globalPos());
+    menu.exec(e->globalPos());
 }
 
 MainWindow::~MainWindow()
 {
+    // memory management
     delete ui;
 }
 

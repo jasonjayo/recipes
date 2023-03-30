@@ -3,7 +3,7 @@
 
 #include <QString>
 
-
+// programmer-defined exception
 class MissingFileException : public std::exception {
 private:
     QString fileName;

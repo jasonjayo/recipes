@@ -6,4 +6,7 @@
         <file>icon_restaurant.svg</file>
         <file>cake.jpg</file>
     </qresource>
+    <qresource prefix="/recipes">
+        <file>recipes.json</file>
+    </qresource>
 </RCC>

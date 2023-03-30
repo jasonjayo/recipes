@@ -14,10 +14,10 @@
 
 
 FoodRecipe::FoodRecipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
-                       Nutrition nutrition, bool vegan, bool vegetarian, QList<QString> instructions, DietaryInfo dietaryInfo, int servings)
-    : Recipe(title, description, photos, stats, ingredients, nutrition, vegan, vegetarian, instructions, dietaryInfo), servings(servings)
+                       Nutrition nutrition, QList<QString> instructions, DietaryInfo dietaryInfo, int servings)
+    : Recipe(title, description, photos, stats, ingredients, nutrition, instructions, dietaryInfo), servings(servings)
 {
-    qDebug() << photos.size();
+
 }
 
 int FoodRecipe::getServings() {
@@ -26,7 +26,6 @@ int FoodRecipe::getServings() {
 
 QVBoxLayout* FoodRecipe::createCard() {
 
-
     QVBoxLayout* recipeContainer = new QVBoxLayout();
     recipeContainer->setSpacing(10);
 
@@ -34,15 +33,10 @@ QVBoxLayout* FoodRecipe::createCard() {
     QLabel* image = new QLabel();
     QPixmap pix(":/images/" + photos.first());
     recipeContainer->addWidget(image);
-
     QScreen *screen = QGuiApplication::primaryScreen();
     int width = screen->geometry().width();
-
     image->setScaledContents(true);
-    //image->setPixmap(pix.scaled( image->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-//    image->setPixmap(pix.scaled(300, 200));
     image->setPixmap(pix.scaledToWidth((width - 200) / 4));
-
     image->setToolTip(QString::fromStdString(to_long_string()));
 
 
@@ -52,7 +46,6 @@ QVBoxLayout* FoodRecipe::createCard() {
 
     QHBoxLayout* labels = RecipeUtils::getLabelsComponent(this);
     recipeContainer->addLayout(labels);
-
 
     // stats grid
     QGridLayout* statsGrid = Recipe::getCardStatsGridComponent();
@@ -68,24 +61,12 @@ QVBoxLayout* FoodRecipe::createCard() {
 
     recipeContainer->addLayout(statsGrid);
 
-
-    // serving count
-    /*QLabel* stats_servingCountIconLabel = new QLabel;
-    QPixmap stats_servingCountIcon(":/images/icon_restaurant.svg");
-    QLabel* stats_servingCountValueLabel = new QLabel(QString::number(servings));
-    stats_servingCountValueLabel->setStyleSheet("background: #fff;");
-    stats_servingCountIconLabel->setPixmap(stats_servingCountIcon);
-    statsGrid->addWidget(stats_servingCountIconLabel, 1, 0);
-    statsGrid->addWidget(stats_servingCountValueLabel, 1, 1, 1, 4);*/
-
-
     // description
     QLabel* descriptionLabel = Recipe::getCardDescriptionComponent();
     recipeContainer->addWidget(descriptionLabel);
 
-
     // view button
-    QPushButton* viewBtn = Recipe::getCardButtonComponent();
+    viewBtn = Recipe::getCardButtonComponent();
     recipeContainer->addWidget(viewBtn);
 
     return recipeContainer;
@@ -99,8 +80,7 @@ std::string FoodRecipe::to_long_string() {
     return "Food recipe:\n" + Recipe::to_long_string();
 }
 
-std::ostringstream &operator<<(std::ostringstream &o, const FoodRecipe &r) {
-    qDebug() << "<< operator called";
-    o << "test ostream";
+std::ostringstream &operator<<(std::ostringstream &o, FoodRecipe &r) {
+    o << r.to_long_string();
     return o;
 }

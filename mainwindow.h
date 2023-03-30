@@ -22,8 +22,7 @@ protected:
 private:
     Ui::MainWindow *ui;
     void displayCards();
-    void removeAllCards();
-    void clearWidgets(QLayout *layout, int startIndex = 0);
+    void removeWidgets(QLayout* layout, int startIndex = 0);
     QAction* resetAct;
 };
 #endif // MAINWINDOW_H

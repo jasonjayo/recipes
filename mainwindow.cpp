@@ -98,6 +98,7 @@ MainWindow::MainWindow(QWidget *parent)
 #endif
 
     // set up filters box
+    // pointers with new so created on the heap
     QGroupBox* filtersBox = new QGroupBox("Filters");
     QCheckBox* veganFilterBox = new QCheckBox("Vegan");
     QCheckBox* vegetarianFilterBox = new QCheckBox("Vegetarian");
@@ -375,6 +376,8 @@ void MainWindow::displayCards() {
         if (showVegetarianOnly && !(r->dietaryInfo.vegetarian)) continue;
         if (maxTime < (r->stats.prepTime + r->stats.cookTime)) continue;
 
+        // createCard call determined by whether r points to a DrinkRecipe or a FoodRecipe
+        // polymorphism thanks to virtual function
         QVBoxLayout* recipeContainer = r->createCard();
 
         QPushButton* viewBtn = r->viewBtn;
@@ -395,6 +398,7 @@ void MainWindow::displayCards() {
                               );
 
             removeWidgets(rd_diateryInfo);
+            // using getLabelsComponent from RecipeUtils namespace
             rd_diateryInfo->addLayout(RecipeUtils::getLabelsComponent(r));
 
             QString ingredientsHtml;
@@ -449,6 +453,7 @@ void MainWindow::removeWidgets(QLayout* layout, int startIndex) {
     }
 }
 
+// use of QMenu
 void MainWindow::contextMenuEvent(QContextMenuEvent* e) {
     QMenu menu(this);
     menu.addAction(resetAct);

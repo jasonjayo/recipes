@@ -9,6 +9,7 @@
 #include <QGuiApplication>
 #include "Qscreen"
 
+// initialiser list
 Recipe::Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients, Nutrition nutrition, QList<QString> instructions, DietaryInfo dietaryInfo)
     : title(title), description(description), photos(photos), dietaryInfo(dietaryInfo), stats(stats), ingredients(ingredients), nutrition(nutrition), instructions(instructions)
 {

@@ -50,7 +50,7 @@ QGridLayout* Recipe::getCardStatsGridComponent() {
     // prep time
     QLabel* stats_timeIconLabel = new QLabel;
     QLabel* stats_timeValue = new QLabel(QString("Prep in " + QString::number(stats.prepTime) + " minutes\n" +
-                              "Cook in " + QString::number(stats.cookTime) + " minutes"));
+                                                 "Cook in " + QString::number(stats.cookTime) + " minutes"));
     QPixmap stats_timeIcon(":/images/icon_clock.svg");
     stats_timeValue->setStyleSheet("background: #fff; padding: 5px;");
     stats_timeIconLabel->setPixmap(stats_timeIcon);

@@ -49,8 +49,6 @@ public:
     Recipe(QString title, QString description, QList<QString> photos, RecipeStats stats, QList<Ingredient> ingredients,
            Nutrition nutrition, QList<QString> instructions, DietaryInfo dietaryInfo);
 
-
-
     QString title;
     QString description;
     QList<QString> photos;

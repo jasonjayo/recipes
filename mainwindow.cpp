@@ -26,6 +26,7 @@
 #include <QContextMenuEvent>
 #include <QAction>
 #include <QSlider>
+#include <QScrollBar>
 
 #define NUM_CARDS_PER_LINE 4
 #define GRID_TOP_OFFSET 1
@@ -50,6 +51,8 @@ bool showVeganOnly = false;
 bool showVegetarianOnly = false;
 
 int maxTime = 100;
+
+int homeScrollPos = 0;
 
 // vars for recipe details page
 QGridLayout* rd_grid;
@@ -181,9 +184,9 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     QPushButton* backBtn = new QPushButton("< Back");
-    //    backBtn->setMaximumWidth(100);
     connect(backBtn, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(0);
+        ui->scrollArea->verticalScrollBar()->setValue(homeScrollPos);
     });
     ui->gridLayout_p2->addWidget(backBtn, 0, 0);
 
@@ -295,7 +298,8 @@ MainWindow::MainWindow(QWidget *parent)
      *  BEGIN RECIPE DETAILS PAGE UI SET UP
      */
 
-    rd_grid = new QGridLayout();
+
+    rd_grid = ui->gridLayout_p2;
     rd_grid->setSpacing(9);
     rd_title = new QLabel();
     rd_description = new QLabel();
@@ -307,14 +311,14 @@ MainWindow::MainWindow(QWidget *parent)
     rd_diateryInfo = new QHBoxLayout();
     rd_instructions = new QLabel();
 
-    rd_grid->addWidget(rd_title, 0, 0);
-    rd_grid->addWidget(rd_description, 1, 0, 1, 3);
-    rd_grid->addWidget(rd_image, 2, 0, 1, 2);
-    rd_grid->addLayout(rd_diateryInfo, 3, 0, 1, 3);
-    rd_grid->addWidget(rd_stats, 4, 0);
-    rd_grid->addWidget(rd_ingredients, 4, 1);
-    rd_grid->addWidget(rd_nutrition, 4, 2);
-    rd_grid->addWidget(rd_instructions, 5, 0, 1, 3);
+    rd_grid->addWidget(rd_title, 1, 0);
+    rd_grid->addWidget(rd_description, 2, 0, 1, 3);
+    rd_grid->addWidget(rd_image, 3, 0, 1, 2);
+    rd_grid->addLayout(rd_diateryInfo, 4, 0, 1, 3);
+    rd_grid->addWidget(rd_stats, 5, 0);
+    rd_grid->addWidget(rd_ingredients, 5, 1);
+    rd_grid->addWidget(rd_nutrition, 5, 2);
+    rd_grid->addWidget(rd_instructions, 6, 0, 1, 3);
 
     QString rd_sectionStylesheet = "background: #fff;padding: 10px;border-radius:12px;border: 8px solid #e0e0e0;";
     rd_stats->setStyleSheet(rd_sectionStylesheet);
@@ -326,18 +330,9 @@ MainWindow::MainWindow(QWidget *parent)
     rd_nutrition->setAlignment(Qt::AlignTop);
     rd_ingredients->setAlignment(Qt::AlignTop);
 
-    ui->gridLayout_p2->addLayout(rd_grid, 1, 0, 1, 3);
-
-//    ui->gridLayout_p2->setRowStretch(1, 0);
-//    ui->gridLayout_p2->setRowStretch(0, 0);
-//    rd_grid->setRowStretch(0, 0);
-//    rd_grid->setRowStretch(1, 0);
-//    rd_grid->setRowStretch(2, 0);
-//    rd_grid->setRowStretch(3, 0);
-//    rd_grid->setRowStretch(4, 0);
-//    rd_grid->setRowStretch(5, 0);
-//    QSpacerItem* spacer = new QSpacerItem(0, 500, QSizePolicy::Maximum, QSizePolicy::Maximum);
-//    ui->gridLayout_p2->addItem(spacer, 2, 0);
+    QLabel* spacer = new QLabel();
+    rd_grid->addWidget(spacer, 7, 1);
+    rd_grid->setRowStretch(7, 10);
 
     /*
      *  END RECIPE DETAILS PAGE UI SET UP
@@ -347,12 +342,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // now ready to display recipes on screen
     displayCards();
-
-    // working on copy constructor
-    //    qDebug() << &drinkRecipes.at(0)->instructions;
-    //    DrinkRecipe copy = *drinkRecipes.at(0);
-    //    qDebug() << &copy.instructions;
-
 
     // ensure page 0 (home) of stacked widget is displayed
     ui->stackedWidget->setCurrentIndex(0);
@@ -374,7 +363,6 @@ void MainWindow::displayCards() {
     }
 
 
-
     int i = 0;
     for (int j = 0; j < recipes.count(); j++) {
 
@@ -392,6 +380,8 @@ void MainWindow::displayCards() {
         QPushButton* viewBtn = r->viewBtn;
         connect(viewBtn, &QPushButton::clicked, this, [=]() {
             ui->stackedWidget->setCurrentIndex(1);
+            homeScrollPos = ui->scrollArea->verticalScrollBar()->value();
+            ui->scrollArea->verticalScrollBar()->setValue(0);
 
             rd_title->setText(r->title);
             rd_title->setStyleSheet("font-size: 30px;font-weight:bold;");
@@ -400,7 +390,8 @@ void MainWindow::displayCards() {
             rd_image->setPixmap(pm.scaledToWidth(400));
             rd_stats->setText("<h1>Stats</h1><ul><li>Prep time: " + QString::number(r->stats.prepTime) + "</li>" +
                               "<li>Cook time: " + QString::number(r->stats.cookTime) + "</li>" +
-                              "<li>Difficulty level: " + (char) (r->stats.difficulty.difficultyScale + 65) + "</li></ul>"
+                              "<li>Difficulty level: " + (char) (r->stats.difficulty.difficultyScale + 65) + "</li>\
+                              </ul>"
                               );
 
             removeWidgets(rd_diateryInfo);
@@ -409,7 +400,8 @@ void MainWindow::displayCards() {
             QString ingredientsHtml;
             ingredientsHtml += "<h1>Ingredients</h1><ul>";
             for (int l = 0; l < r->ingredients.length(); l++) {
-                ingredientsHtml += "<li>" + r->ingredients.at(l).quantity + " " + r->ingredients.at(l).title + "</li>";
+                ingredientsHtml += "<li>" + r->ingredients.at(l).quantity + " " + r->ingredients.at(l).title +
+                        "</li>";
             }
             ingredientsHtml += "</ul>";
             rd_ingredients->setText(ingredientsHtml);
@@ -435,12 +427,12 @@ void MainWindow::displayCards() {
 
         });
 
+        // using overloaded operator
         if (j + 1 < recipes.count() && *r < *recipes.at(j+1)) {
             QLabel* l = new QLabel("Fewer calories (" + QString::number(r->nutrition.kcal) + ") than " + recipes.at(j+1)->title + " (" + QString::number(recipes.at(j+1)->nutrition.kcal) + ")!");
             recipeContainer->insertWidget(recipeContainer->count() - 2, l);
         }
         ui->gridLayout->addLayout(recipeContainer, (i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, i % 4);
-        //            ui->gridLayout->setRowMinimumHeight((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 600);
         ui->gridLayout->setRowStretch((i / NUM_CARDS_PER_LINE) + GRID_TOP_OFFSET, 0);
         i++;
     }

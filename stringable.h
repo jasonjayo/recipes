@@ -3,6 +3,7 @@
 
 #include <string>
 
+// pure virtual class
 class Stringable
 {
 public:
